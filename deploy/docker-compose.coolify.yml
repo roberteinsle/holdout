@@ -1,4 +1,6 @@
 # Paste into Coolify (Docker Compose Empty). Coolify never builds; it only pulls images.
+# The database is a separate Coolify resource (PostgreSQL), reached over the
+# shared `coolify` network. DB_HOST = the internal hostname Coolify shows for it.
 services:
   app:
     image: ghcr.io/roberteinsle/holdout:${APP_TAG:-latest}
@@ -11,7 +13,8 @@ services:
       - APP_URL=${APP_URL}
       - LOG_CHANNEL=stderr
       - DB_CONNECTION=pgsql
-      - DB_HOST=db
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT:-5432}
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -24,9 +27,9 @@ services:
       - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
     volumes:
       - app-storage:/var/www/html/storage
-    depends_on:
-      db:
-        condition: service_healthy
+    networks:
+      - default
+      - coolify
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/up"]
       interval: 30s
@@ -47,7 +50,8 @@ services:
       - APP_URL=${APP_URL}
       - LOG_CHANNEL=stderr
       - DB_CONNECTION=pgsql
-      - DB_HOST=db
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT:-5432}
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -63,22 +67,17 @@ services:
     healthcheck:
       test: ["CMD", "healthcheck-queue"]
       start_period: 10s
+    networks:
+      - default
+      - coolify
     depends_on:
       - app
 
-  db:
-    image: postgres:16-alpine
-    environment:
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
-      interval: 10s
-      retries: 5
 
 volumes:
   app-storage:
-  db-data:
+
+# Lets the app reach the database service managed separately in Coolify.
+networks:
+  coolify:
+    external: true
