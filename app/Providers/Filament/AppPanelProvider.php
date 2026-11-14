@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Support\InitialsAvatarProvider;
 use App\Http\Middleware\SetLocale;
 use App\Support\Palette;
 use Filament\Http\Middleware\Authenticate;
@@ -32,6 +33,7 @@ class AppPanelProvider extends PanelProvider
             ->brandName('Holdout')
             ->viteTheme('resources/css/filament/app/theme.css')
             ->colors(Palette::filament())
+            ->defaultAvatarProvider(InitialsAvatarProvider::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
