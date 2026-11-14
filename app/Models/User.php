@@ -17,7 +17,7 @@ use Laravel\Passkeys\Contracts\PasskeyUser;
 use Laravel\Passkeys\PasskeyAuthenticatable;
 
 #[Fillable(['name', 'email'])]
-#[Hidden(['remember_token'])]
+#[Hidden(['remember_token', 'totp_secret', 'totp_recovery_codes'])]
 class User extends Authenticatable implements FilamentUser, PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
@@ -33,6 +33,9 @@ class User extends Authenticatable implements FilamentUser, PasskeyUser
         return [
             'email_verified_at' => 'datetime',
             'role' => Role::class,
+            'totp_secret' => 'encrypted',
+            'totp_confirmed_at' => 'datetime',
+            'totp_recovery_codes' => 'encrypted:array',
         ];
     }
 
@@ -46,6 +49,11 @@ class User extends Authenticatable implements FilamentUser, PasskeyUser
     public function loginTokens(): HasMany
     {
         return $this->hasMany(LoginToken::class);
+    }
+
+    public function hasTotpEnabled(): bool
+    {
+        return $this->totp_confirmed_at !== null;
     }
 
     public function isOwner(): bool

@@ -11,6 +11,8 @@ window.holdoutPasskeys = {
     isSupported: () => Passkeys.isSupported(),
 
     async login() {
+        // Stop the pending autofill request first, or both ceremonies race for the same session options.
+        Passkeys.cancel();
         const response = await Passkeys.verify({ remember: true });
         window.location.href = response.redirect ?? '/';
     },

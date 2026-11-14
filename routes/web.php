@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\CodeLoginController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\InvitationController;
@@ -20,6 +21,11 @@ Route::middleware('guest')->group(function () {
         ->where('token', '[A-Za-z0-9]{64}')
         ->middleware('throttle:token')
         ->name('login.consume');
+
+    Route::get('/login/code', [CodeLoginController::class, 'show'])->name('login.code');
+    Route::post('/login/code', [CodeLoginController::class, 'store'])
+        ->middleware('throttle:code-login')
+        ->name('login.code.store');
 
     Route::get('/register', [RegisterController::class, 'show'])->name('register');
     Route::post('/register', [RegisterController::class, 'store'])

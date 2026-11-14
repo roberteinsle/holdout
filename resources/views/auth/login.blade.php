@@ -16,4 +16,8 @@
         <x-field name="email" type="email" :label="__('Email')" autocomplete="email webauthn" required maxlength="255" />
         <x-primary-button>{{ __('Email me a sign-in link') }}</x-primary-button>
     </form>
+
+    <a href="{{ route('login.code') }}" class="mt-5 block text-center text-sm font-medium text-amber-700 underline">
+        {{ __('Sign in with authenticator app') }}
+    </a>
 </x-guest-layout>

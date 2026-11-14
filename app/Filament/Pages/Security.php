@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Support\Totp;
 use BackedEnum;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -12,7 +13,7 @@ use Laravel\Passkeys\Passkey;
 use Livewire\Attributes\Url;
 
 /**
- * Lets each user add and remove their passkeys.
+ * Each user's sign-in methods: passkeys and the authenticator-app backup.
  */
 class Security extends Page
 {
@@ -25,14 +26,24 @@ class Security extends Page
     #[Url]
     public bool $welcome = false;
 
+    /** Shown during authenticator setup; the secret itself stays in the session. */
+    public ?string $totpQrCode = null;
+
+    public ?string $totpSecretForDisplay = null;
+
+    public string $totpCode = '';
+
+    /** @var list<string> Shown once after setup or regeneration. */
+    public array $recoveryCodes = [];
+
     public static function getNavigationLabel(): string
     {
-        return __('Passkeys');
+        return __('Sign-in & security');
     }
 
     public function getTitle(): string
     {
-        return __('Passkeys');
+        return __('Sign-in & security');
     }
 
     /** @return Collection<int, Passkey> */
@@ -46,20 +57,109 @@ class Security extends Page
         $user = auth()->user();
         $passkey = $user->passkeys()->findOrFail($id);
 
-        // Same rule as adding one: only shortly after signing in.
-        $confirmedAt = (int) session('auth.password_confirmed_at', 0);
-
-        if (time() - $confirmedAt > (int) config('auth.password_timeout', 10800)) {
-            Notification::make()
-                ->title(__('For your security, please sign in again before removing a passkey.'))
-                ->warning()
-                ->send();
-
+        if (! $this->ensureRecentlyConfirmed()) {
             return;
         }
 
         $deletePasskey($user, $passkey);
 
         Notification::make()->title(__('Passkey removed.'))->success()->send();
+    }
+
+    public function startTotpSetup(Totp $totp): void
+    {
+        if (! $this->ensureRecentlyConfirmed()) {
+            return;
+        }
+
+        $secret = $totp->generateSecret();
+        session()->put('totp.pending_secret', $secret);
+
+        $this->totpQrCode = $totp->qrCode(auth()->user(), $secret);
+        $this->totpSecretForDisplay = trim(chunk_split($secret, 4, ' '));
+        $this->totpCode = '';
+    }
+
+    public function confirmTotpSetup(Totp $totp): void
+    {
+        $this->validate(['totpCode' => ['required', 'string', 'max:10']]);
+
+        $secret = session('totp.pending_secret');
+
+        if (! is_string($secret) || ! $totp->verifySecret($secret, $this->totpCode)) {
+            $this->addError('totpCode', __('This code is not correct. Check the time on your phone and try again.'));
+
+            return;
+        }
+
+        $this->recoveryCodes = $totp->generateRecoveryCodes();
+
+        auth()->user()->forceFill([
+            'totp_secret' => $secret,
+            'totp_confirmed_at' => now(),
+            'totp_recovery_codes' => $this->recoveryCodes,
+            'totp_last_used_step' => null,
+        ])->save();
+
+        session()->forget('totp.pending_secret');
+        $this->reset('totpQrCode', 'totpSecretForDisplay', 'totpCode');
+
+        Notification::make()->title(__('Authenticator app set up.'))->success()->send();
+    }
+
+    public function cancelTotpSetup(): void
+    {
+        session()->forget('totp.pending_secret');
+        $this->reset('totpQrCode', 'totpSecretForDisplay', 'totpCode');
+    }
+
+    public function regenerateRecoveryCodes(Totp $totp): void
+    {
+        $user = auth()->user();
+
+        if (! $user->hasTotpEnabled() || ! $this->ensureRecentlyConfirmed()) {
+            return;
+        }
+
+        $this->recoveryCodes = $totp->generateRecoveryCodes();
+        $user->forceFill(['totp_recovery_codes' => $this->recoveryCodes])->save();
+    }
+
+    public function disableTotp(): void
+    {
+        if (! $this->ensureRecentlyConfirmed()) {
+            return;
+        }
+
+        auth()->user()->forceFill([
+            'totp_secret' => null,
+            'totp_confirmed_at' => null,
+            'totp_recovery_codes' => null,
+            'totp_last_used_step' => null,
+        ])->save();
+
+        $this->recoveryCodes = [];
+
+        Notification::make()->title(__('Authenticator app removed.'))->success()->send();
+    }
+
+    /**
+     * Changing sign-in methods needs a recent sign-in (or passkey confirmation),
+     * the same rule laravel/passkeys applies to adding passkeys.
+     */
+    private function ensureRecentlyConfirmed(): bool
+    {
+        $confirmedAt = (int) session('auth.password_confirmed_at', 0);
+
+        if (time() - $confirmedAt <= (int) config('auth.password_timeout', 10800)) {
+            return true;
+        }
+
+        Notification::make()
+            ->title(__('For your security, please sign in again before changing how you sign in.'))
+            ->warning()
+            ->send();
+
+        return false;
     }
 }
