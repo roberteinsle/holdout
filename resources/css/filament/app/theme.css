@@ -2,3 +2,14 @@
 
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
+
+/* Holdout design: white page with sand-bordered cards in light mode;
+   dark mode keeps Filament's gray-950 / gray-900 (= #151619 / #242529). */
+html:not(.dark) .fi-body {
+    background-color: #ffffff;
+}
+
+html:not(.dark) .fi-section:not(.fi-section-not-contained),
+html:not(.dark) .fi-ta-ctn {
+    --tw-ring-color: #bcae8b;
+}

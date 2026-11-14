@@ -7,9 +7,9 @@
         name="{{ $name }}"
         value="{{ old($name, $value) }}"
         @if ($autocomplete) autocomplete="{{ $autocomplete }}" @endif
-        {{ $attributes->merge(['class' => 'block w-full rounded-lg border border-stone-300 px-3 py-3 text-base focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none']) }}
+        {{ $attributes->merge(['class' => 'block w-full rounded-lg border border-line bg-page px-3 py-3 text-base text-fg focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none']) }}
     >
     @error($name)
-        <span class="mt-1 block text-sm text-red-600">{{ $message }}</span>
+        <span class="mt-1 block text-sm text-danger">{{ $message }}</span>
     @enderror
 </label>

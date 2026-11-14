@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Filament\Support\ButtonComponent;
+use Filament\Support\View\Components\ButtonComponent as FilamentButtonComponent;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -14,7 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Filled buttons follow the Holdout colour roles (see App\Support\Palette).
+        $this->app->bind(FilamentButtonComponent::class, ButtonComponent::class);
     }
 
     /**

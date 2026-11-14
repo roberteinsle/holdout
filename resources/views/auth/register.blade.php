@@ -1,6 +1,6 @@
 <x-guest-layout :title="__('Set up your household')">
     <h1 class="mb-1 text-lg font-semibold">{{ __('Set up your household') }}</h1>
-    <p class="mb-5 text-sm text-stone-600">{{ __('You are the first person here, so you become the owner. You can invite your family afterwards.') }}</p>
+    <p class="mb-5 text-sm text-fg-muted">{{ __('You are the first person here, so you become the owner. You can invite your family afterwards.') }}</p>
 
     <form method="POST" action="{{ route('register.store') }}" class="space-y-4">
         @csrf
