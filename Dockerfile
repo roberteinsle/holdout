@@ -9,15 +9,7 @@ RUN install-php-extensions intl gd zip bcmath pdo_pgsql pdo_mysql
 USER www-data
 WORKDIR /var/www/html
 
-# --- Stage 1: frontend assets (Vite) ---
-FROM node:22-alpine AS assets
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-# --- Stage 2: Composer (same image and extensions as the runtime) ---
+# --- Stage 1: Composer (same image and extensions as the runtime) ---
 # Built on `base` instead of the plain cli image: Filament needs ext-intl,
 # which the stock serversideup image does not ship.
 FROM base AS vendor
@@ -28,6 +20,16 @@ RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-in
 COPY . .
 RUN composer dump-autoload --optimize --no-dev \
  && php artisan filament:assets
+
+# --- Stage 2: frontend assets (Vite) ---
+# The Filament theme imports CSS from vendor/filament, so vendor comes from stage 1.
+FROM node:22-alpine AS assets
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+COPY --from=vendor /app/vendor ./vendor
+RUN npm run build
 
 # --- Stage 3: runtime ---
 FROM base
