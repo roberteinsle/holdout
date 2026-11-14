@@ -13,7 +13,7 @@ class AvatarTest extends TestCase
 
     public function test_pages_do_not_load_avatars_from_third_parties(): void
     {
-        $user = User::factory()->create(['name' => 'Robert Example']);
+        $user = User::factory()->create(['name' => 'Alex Example']);
 
         $this->actingAs($user)->get('/security')->assertOk()->assertDontSee('ui-avatars.com');
     }

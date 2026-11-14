@@ -57,7 +57,7 @@ class Security extends Page
         $user = auth()->user();
         $passkey = $user->passkeys()->findOrFail($id);
 
-        if (! $this->ensureRecentlyConfirmed()) {
+        if (! $this->ensureRecentlyConfirmed('deletePasskey', [$id])) {
             return;
         }
 
@@ -68,7 +68,7 @@ class Security extends Page
 
     public function startTotpSetup(Totp $totp): void
     {
-        if (! $this->ensureRecentlyConfirmed()) {
+        if (! $this->ensureRecentlyConfirmed('startTotpSetup')) {
             return;
         }
 
@@ -117,7 +117,7 @@ class Security extends Page
     {
         $user = auth()->user();
 
-        if (! $user->hasTotpEnabled() || ! $this->ensureRecentlyConfirmed()) {
+        if (! $user->hasTotpEnabled() || ! $this->ensureRecentlyConfirmed('regenerateRecoveryCodes')) {
             return;
         }
 
@@ -127,7 +127,7 @@ class Security extends Page
 
     public function disableTotp(): void
     {
-        if (! $this->ensureRecentlyConfirmed()) {
+        if (! $this->ensureRecentlyConfirmed('disableTotp')) {
             return;
         }
 
@@ -144,10 +144,14 @@ class Security extends Page
     }
 
     /**
-     * Changing sign-in methods needs a recent sign-in (or passkey confirmation),
-     * the same rule laravel/passkeys applies to adding passkeys.
+     * Changing sign-in methods needs a recent sign-in, the same rule
+     * laravel/passkeys applies to adding passkeys. If it is too old, users with a
+     * passkey confirm with it in the browser and the action runs again;
+     * everyone else is asked to sign in again with an email link.
+     *
+     * @param  array<int, mixed>  $arguments
      */
-    private function ensureRecentlyConfirmed(): bool
+    private function ensureRecentlyConfirmed(string $retryMethod, array $arguments = []): bool
     {
         $confirmedAt = (int) session('auth.password_confirmed_at', 0);
 
@@ -155,9 +159,17 @@ class Security extends Page
             return true;
         }
 
+        if (auth()->user()->hasPasskeysEnabled()) {
+            $this->dispatch('holdout-confirm-passkey', method: $retryMethod, arguments: $arguments);
+
+            return false;
+        }
+
         Notification::make()
             ->title(__('For your security, please sign in again before changing how you sign in.'))
+            ->body(__('Sign out and sign in again with an email link, then try once more.'))
             ->warning()
+            ->persistent()
             ->send();
 
         return false;

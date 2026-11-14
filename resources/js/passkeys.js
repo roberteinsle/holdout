@@ -29,6 +29,11 @@ window.holdoutPasskeys = {
         }
     },
 
+    /** Confirm the signed-in user with one of their passkeys (marks the sign-in as recent). */
+    async confirm() {
+        return await Passkeys.verify({ routes: confirmRoutes });
+    },
+
     /**
      * Adding a passkey needs a recent sign-in (HTTP 423 otherwise).
      * Users who already have a passkey can confirm with it and continue.

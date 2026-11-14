@@ -1,4 +1,14 @@
 <x-filament-panels::page>
+    {{-- Re-confirm with a passkey when the last sign-in is too old, then repeat the action. --}}
+    <div
+        x-data
+        x-on:holdout-confirm-passkey.window="
+            window.holdoutPasskeys.confirm()
+                .then(() => $wire.call($event.detail.method, ...($event.detail.arguments ?? [])))
+                .catch(() => {})
+        "
+    ></div>
+
     @if ($welcome && $this->getPasskeys()->isEmpty())
         <x-filament::section>
             <x-slot name="heading">{{ __('Welcome to :app!', ['app' => config('app.name')]) }}</x-slot>
