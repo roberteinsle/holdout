@@ -16,4 +16,4 @@ For the camera scanner and installing the app on phones, add HTTPS with Nginx Pr
 
 ## License
 
-MIT
+[AGPL-3.0](LICENSE). If you run a modified version for others over a network, you must offer them its source code.
