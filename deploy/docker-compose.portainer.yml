@@ -6,13 +6,16 @@
 #   HOLDOUT_PORT  port on the host for direct access, default 8090 (http://<nas-ip>:8090)
 #   HOLDOUT_DATA  folder on the host for the data, default /volume1/docker/holdout
 #
-# Before the first start: create the network "proxy" once (shared with Nginx Proxy
-# Manager) and give the data folder to uid 82 (see handbuch/Installation.md).
+# Before the first start: create the data folder and the network "proxy" once
+# (shared with Nginx Proxy Manager), see handbuch/Installation.md.
 services:
   holdout:
     image: ${APP_IMAGE:?Set APP_IMAGE, e.g. ghcr.io/<github-owner>/holdout}:${APP_TAG:-latest}
     pull_policy: always
     restart: unless-stopped
+    # Starts as root only to hand the data folder to the app user on start;
+    # PHP and the web server workers run as www-data.
+    user: root
     ports:
       - "${HOLDOUT_PORT:-8090}:8080"
     volumes:

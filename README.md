@@ -8,7 +8,7 @@ Mobile-first web app to build and maintain a family emergency food & water suppl
 
 Holdout runs at home, so it keeps working when the internet is down. On any always-on Docker host (e.g. a Synology DiskStation with Portainer):
 
-1. Create a data folder owned by uid 82 and the Docker network `proxy`.
+1. Create a data folder (e.g. `/volume1/docker/holdout`) and the Docker network `proxy`.
 2. Deploy `deploy/docker-compose.portainer.yml` as a stack with `APP_IMAGE` set to the published image.
 3. Open `http://<server-ip>:8090` and create your household. No sign-in, no configuration.
 

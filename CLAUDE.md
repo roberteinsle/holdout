@@ -9,8 +9,10 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   GitHub Actions builds the image (`.github/workflows/build.yml`) and pushes it to GHCR; it runs as a
   Portainer stack (`deploy/docker-compose.portainer.yml`), updated by Portainer's GitOps polling. This
   deliberately deviates from the GitHub → GHCR → Coolify deployment standard. No secrets in the image.
-- One container, SQLite in `storage/app/data` (bind-mounted, owned by uid 82), sync queue, logs to stderr.
-  `docker/entrypoint.d/40-holdout-data.sh` creates the database and `app.key` on first start; `config/app.php`
+- One container, SQLite in `storage/app/data` (bind-mounted), sync queue, logs to stderr. The stack starts the
+  container as root so `docker/entrypoint.d/40-holdout-data.sh` can hand the folder to www-data (uid 82) and
+  create the database and `app.key` on first start (`60-holdout-permissions.sh` fixes ownership after the
+  Laravel automations); PHP-FPM and nginx workers run unprivileged. `config/app.php`
   reads the key from that file when `APP_KEY` is unset. Proxies are trusted (`X-Forwarded-*`) for HTTPS via NPM.
 - Local: `docker compose up -d` (app on :8080, SQLite), then
   `docker compose exec app composer install` and `docker compose exec app php artisan migrate`.

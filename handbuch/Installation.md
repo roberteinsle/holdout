@@ -17,14 +17,9 @@ There is no sign-in. Everyone who can reach the app on your network can use it; 
 
 ## 1. Prepare the server
 
-Create a folder for the data and give it to the user the container runs as (uid 82):
+Create a folder for the data, e.g. `/volume1/docker/holdout` (on a DiskStation: File Station, inside the shared folder `docker`).
 
-```bash
-sudo mkdir -p /volume1/docker/holdout
-sudo chown -R 82:82 /volume1/docker/holdout
-```
-
-If the permissions are wrong, the container stops on start with a message that names the exact `chown` command.
+You do not need to change its owner: the container starts as root only to hand the folder to the app user (`www-data`, uid 82); PHP and the web server workers then run as that user. If the folder's own permissions still block the app user (for example Synology ACLs), the container stops with a message. On a DiskStation, then open File Station → the folder → Properties → Permission and give **Everyone** read/write on this folder; Holdout is reachable on your home network only.
 
 Create the Docker network `proxy` once. Holdout and Nginx Proxy Manager share it (Portainer → Networks → Add network, or):
 

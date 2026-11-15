@@ -41,7 +41,7 @@ CI runs Pint in test mode and the test suite on every push and pull request.
 ## Architecture notes
 
 - **Home network, no sign-in.** The app is never exposed to the internet. Laravel's auth guard is still used to remember which person uses a device ("Who are you?" logs that person in with a remember-me cookie), so Filament and the history work as usual. People have no email or password.
-- **One container, SQLite.** The image defaults to SQLite in `storage/app/data`, synchronous queue and logs to stderr. `docker/entrypoint.d/40-holdout-data.sh` creates the database and `app.key` on first start; `config/app.php` reads the key from that file when `APP_KEY` is not set.
+- **One container, SQLite.** The image defaults to SQLite in `storage/app/data`, synchronous queue and logs to stderr. The stack starts the container as root: `docker/entrypoint.d/40-holdout-data.sh` hands the data folder to `www-data` (uid 82) and creates the database and `app.key` on first start; `60-holdout-permissions.sh` fixes ownership after the Laravel automations. PHP-FPM and nginx workers run unprivileged. `config/app.php` reads the key from the file when `APP_KEY` is not set.
 - **Deployment** deviates from the GitHub → GHCR → Coolify standard: images are still built by GitHub Actions and pushed to GHCR, but they run as a Portainer stack at home, updated by Portainer's GitOps polling.
 
 ## Documentation workflow
