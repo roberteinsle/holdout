@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\Tables;
 
 use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -14,15 +15,12 @@ class UsersTable
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Name'))
-                    ->description(fn ($record) => $record->email)
                     ->searchable(),
-                TextColumn::make('role')
-                    ->label(__('Role'))
-                    ->badge(),
             ])
             ->defaultSort('name')
             ->paginated(false)
             ->recordActions([
+                EditAction::make(),
                 DeleteAction::make()->label(__('Remove')),
             ]);
     }

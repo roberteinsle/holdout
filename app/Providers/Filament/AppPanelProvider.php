@@ -5,20 +5,19 @@ namespace App\Providers\Filament;
 use App\Filament\Support\InitialsAvatarProvider;
 use App\Http\Middleware\SetLocale;
 use App\Support\Palette;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\View\PanelsRenderHook;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AppPanelProvider extends PanelProvider
@@ -44,7 +43,6 @@ class AppPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
-                AuthenticateSession::class,
                 ShareErrorsFromSession::class,
                 SetLocale::class,
                 PreventRequestForgery::class,
@@ -55,9 +53,11 @@ class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->renderHook(
-                PanelsRenderHook::BODY_END,
-                fn (): string => Blade::render("@vite('resources/js/passkeys.js')"),
-            );
+            // No sign-in on the home network: "log out" means "switch person".
+            ->userMenuItems([
+                'logout' => fn (Action $action): Action => $action
+                    ->label(__('Switch person'))
+                    ->icon(Heroicon::OutlinedArrowsRightLeft),
+            ]);
     }
 }

@@ -12,21 +12,13 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Local demo data: one household with an owner and a member.
-     * Sign in with a magic link; with MAIL_MAILER=log the link is in storage/logs.
+     * Local demo data: one household with two people.
      */
     public function run(): void
     {
         $household = Household::factory()->create(['name' => 'Demo household', 'locale' => 'de']);
 
-        User::factory()->owner()->for($household)->create([
-            'name' => 'Owner',
-            'email' => 'owner@example.com',
-        ]);
-
-        User::factory()->for($household)->create([
-            'name' => 'Member',
-            'email' => 'member@example.com',
-        ]);
+        User::factory()->for($household)->create(['name' => 'Alex']);
+        User::factory()->for($household)->create(['name' => 'Sam']);
     }
 }

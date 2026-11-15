@@ -4,6 +4,10 @@ namespace App\Policies;
 
 use App\Models\User;
 
+/**
+ * Everyone in the household may manage the family list. The person using
+ * this device cannot remove themselves (switch person first).
+ */
 class UserPolicy
 {
     public function viewAny(User $user): bool
@@ -18,19 +22,16 @@ class UserPolicy
 
     public function create(User $user): bool
     {
-        return false; // people join by invitation
+        return $user->household_id !== null;
     }
 
     public function update(User $user, User $model): bool
     {
-        return false;
+        return $user->household_id === $model->household_id;
     }
 
-    /** Owners can remove other members of their household, never themselves. */
     public function delete(User $user, User $model): bool
     {
-        return $user->isOwner()
-            && $user->household_id === $model->household_id
-            && ! $user->is($model);
+        return $user->household_id === $model->household_id && ! $user->is($model);
     }
 }

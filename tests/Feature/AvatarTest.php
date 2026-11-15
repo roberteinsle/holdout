@@ -15,7 +15,7 @@ class AvatarTest extends TestCase
     {
         $user = User::factory()->create(['name' => 'Alex Example']);
 
-        $this->actingAs($user)->get('/security')->assertOk()->assertDontSee('ui-avatars.com');
+        $this->actingAs($user)->get('/users')->assertOk()->assertDontSee('ui-avatars.com');
     }
 
     public function test_the_avatar_shows_escaped_initials(): void

@@ -5,15 +5,20 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 ## Stack and conventions
 - PHP 8.5 everywhere. The version lives in exactly three places, changed together:
   `Dockerfile` (`ARG PHP_VERSION`), `composer.json` (`"php": "^8.5"`), `.devcontainer/devcontainer.json`.
-- Production: GitHub Actions builds the image (`.github/workflows/build.yml`) and pushes it to GHCR;
-  Coolify only pulls (`deploy/docker-compose.coolify.yml`). No secrets in the image.
-- Local: `docker compose up -d` (app on :8080, Postgres), then
+- Runs on the home network, never exposed to the internet (it must work in a grid or internet outage).
+  GitHub Actions builds the image (`.github/workflows/build.yml`) and pushes it to GHCR; it runs as a
+  Portainer stack (`deploy/docker-compose.portainer.yml`), updated by Portainer's GitOps polling. This
+  deliberately deviates from the GitHub → GHCR → Coolify deployment standard. No secrets in the image.
+- One container, SQLite in `storage/app/data` (bind-mounted, owned by uid 82), sync queue, logs to stderr.
+  `docker/entrypoint.d/40-holdout-data.sh` creates the database and `app.key` on first start; `config/app.php`
+  reads the key from that file when `APP_KEY` is unset. Proxies are trusted (`X-Forwarded-*`) for HTTPS via NPM.
+- Local: `docker compose up -d` (app on :8080, SQLite), then
   `docker compose exec app composer install` and `docker compose exec app php artisan migrate`.
 - Tests use in-memory SQLite (`phpunit.xml`). Before committing: `vendor/bin/pint` and `php artisan test`.
-- Sign-in: passkeys (`laravel/passkeys`), magic link, and authenticator app (TOTP) as backup. No passwords.
-  Changing sign-in methods needs a recent sign-in (`auth.password_confirmed_at`); passkey, magic-link and
-  code sign-ins all set it.
-- One household per installation (v0.1); roles owner/member via policies.
+- No sign-in, no accounts, no email. Each device picks a person on "Who are you?" (`/who`, route `login`),
+  which logs that person in with a remember-me cookie, so Filament and the history know who acts.
+  People (`users`) have only a name. One household per installation; everyone may manage the family list.
+- Emergency fallbacks matter more than the live app: printout (#13) and the PWA offline copy (#14).
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).
 - UI strings in English and German from the start (`__()` with English source, `lang/de.json`).

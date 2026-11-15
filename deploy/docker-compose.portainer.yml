@@ -1,0 +1,31 @@
+# Holdout on the home network, e.g. as a Portainer stack on a Synology DiskStation.
+# One container; the SQLite database and the app key live in HOLDOUT_DATA.
+#
+# Stack variables (set in Portainer):
+#   APP_IMAGE     required, the image GitHub Actions pushes, e.g. ghcr.io/<github-owner>/holdout
+#   HOLDOUT_PORT  port on the host for direct access, default 8090 (http://<nas-ip>:8090)
+#   HOLDOUT_DATA  folder on the host for the data, default /volume1/docker/holdout
+#
+# Before the first start: create the network "proxy" once (shared with Nginx Proxy
+# Manager) and give the data folder to uid 82 (see handbuch/Installation.md).
+services:
+  holdout:
+    image: ${APP_IMAGE:?Set APP_IMAGE, e.g. ghcr.io/<github-owner>/holdout}:${APP_TAG:-latest}
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "${HOLDOUT_PORT:-8090}:8080"
+    volumes:
+      - ${HOLDOUT_DATA:-/volume1/docker/holdout}:/var/www/html/storage/app/data
+    networks:
+      - default
+      - proxy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  proxy:
+    external: true

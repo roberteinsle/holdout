@@ -2,7 +2,7 @@
 
 ## Stack
 
-Laravel 13, Filament 5, PHP 8.5, PostgreSQL in production, SQLite in tests. Frontend assets are built with Vite and Tailwind CSS 4.
+Laravel 13, Filament 5, PHP 8.5, SQLite (in production and in tests). Frontend assets are built with Vite and Tailwind CSS 4.
 
 The PHP version appears in exactly three places that change together: `Dockerfile` (`ARG PHP_VERSION`), `composer.json` and `.devcontainer/devcontainer.json`.
 
@@ -12,14 +12,14 @@ The devcontainer (GitHub Codespaces or VS Code) provides PHP, Composer, Node and
 
 ```bash
 cp .env.example .env
-docker compose up -d                        # app on http://localhost:8080 + PostgreSQL
+docker compose up -d                        # app on http://localhost:8080
 docker compose exec app composer install
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate --seed
 npm ci && npm run build
 ```
 
-The seeder creates a demo household with `owner@example.com` and `member@example.com`. With `MAIL_MAILER=log`, sign-in links appear in `storage/logs/laravel.log`.
+The database is `database/database.sqlite`. The seeder creates a demo household with two people.
 
 ## Tests and code style
 
@@ -33,10 +33,16 @@ CI runs Pint in test mode and the test suite on every push and pull request.
 ## Conventions
 
 - Every input is validated on the server; use validated data only.
-- Every route that can be abused (sign-in, invitations, external APIs) has a rate limit.
+- Every route that calls an external API (e.g. Open Food Facts) or does expensive work has a rate limit.
 - No API keys or secrets in the frontend; `VITE_*` variables are public.
 - All UI text is translatable: English source strings with `__()`, German in `lang/de.json`.
 - No personal data of the maintainer in the repository (code, docs, commits, issues).
+
+## Architecture notes
+
+- **Home network, no sign-in.** The app is never exposed to the internet. Laravel's auth guard is still used to remember which person uses a device ("Who are you?" logs that person in with a remember-me cookie), so Filament and the history work as usual. People have no email or password.
+- **One container, SQLite.** The image defaults to SQLite in `storage/app/data`, synchronous queue and logs to stderr. `docker/entrypoint.d/40-holdout-data.sh` creates the database and `app.key` on first start; `config/app.php` reads the key from that file when `APP_KEY` is not set.
+- **Deployment** deviates from the GitHub → GHCR → Coolify standard: images are still built by GitHub Actions and pushed to GHCR, but they run as a Portainer stack at home, updated by Portainer's GitOps polling.
 
 ## Documentation workflow
 

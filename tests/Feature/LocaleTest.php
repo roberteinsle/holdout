@@ -15,8 +15,8 @@ class LocaleTest extends TestCase
     {
         User::factory()->create();
 
-        $this->get('/login', ['Accept-Language' => 'de-DE,de;q=0.9'])->assertSee('Mit Passkey anmelden');
-        $this->get('/login', ['Accept-Language' => 'en-US'])->assertSee('Sign in with passkey');
+        $this->get('/who', ['Accept-Language' => 'de-DE,de;q=0.9'])->assertSee('Wer bist du?');
+        $this->get('/who', ['Accept-Language' => 'en-US'])->assertSee('Who are you?');
     }
 
     public function test_signed_in_users_get_their_household_language(): void
@@ -24,8 +24,8 @@ class LocaleTest extends TestCase
         $user = User::factory()->for(Household::factory()->state(['locale' => 'de']))->create();
 
         $this->actingAs($user)
-            ->get('/security', ['Accept-Language' => 'en-US'])
+            ->get('/users', ['Accept-Language' => 'en-US'])
             ->assertOk()
-            ->assertSee('Deine Passkeys');
+            ->assertSee('Person hinzufügen');
     }
 }
