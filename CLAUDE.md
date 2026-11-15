@@ -25,8 +25,12 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - Household size lives in `members` (type adult/child + count, per the roadmap), separate from the people
   who use the app; target days and the "eat soon" window are on `households`.
 - Modules live in `app/Modules/<Name>/` (service provider in `bootstrap/providers.php`) and register into the
-  registries in `app/Registries/` (`CategoryRegistry` so far; dashboard and navigation registries come with
-  their first use). Core and other modules only read registries; `tests/Unit/ArchitectureTest.php` enforces it.
+  registries in `app/Registries/` (`CategoryRegistry`, `NavigationRegistry` for Filament resources/pages; a
+  dashboard registry comes with its first use). Core and other modules only read registries;
+  `tests/Unit/ArchitectureTest.php` enforces it. A module owns its models, policies (`Gate::policy`), Filament
+  resources and migrations (`loadMigrationsFrom`); factories stay in `database/factories`.
+- Modules: `Supply` (categories), `Inventory` (products; batches, locations, movements follow). Package units
+  g/kg/ml/l, converted to kg or l with 1 l = 1 kg. Lists are mobile first (details in the name column).
 - Categories: the Supply module registers BLE values per person/day (children only differ for drinks).
   `CategorySeeder` syncs them on every start (`migrate --seed`); `DatabaseSeeder` must stay idempotent, demo
   data is `DemoSeeder`. Category names are English source strings; keep them in `lang/de.json`.

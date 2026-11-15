@@ -41,7 +41,8 @@ CI runs Pint in test mode and the test suite on every push and pull request.
 
 ## Architecture notes
 
-- **Modules and registries.** Features are split into modules in `app/Modules/<Name>/`, each with a service provider listed in `bootstrap/providers.php`. Modules register their parts in the registries in `app/Registries/` (e.g. `CategoryRegistry`). Core code and other modules only read from the registries and never use a module directly; `tests/Unit/ArchitectureTest.php` enforces this. Further registries (dashboard tiles, navigation) are added with their first use.
+- **Modules and registries.** Features are split into modules in `app/Modules/<Name>/`, each with a service provider listed in `bootstrap/providers.php`. Modules register their parts in the registries in `app/Registries/`: `CategoryRegistry` (supply categories) and `NavigationRegistry` (Filament resources and pages, read by the panel provider). Core code and other modules only read from the registries and never use a module directly; `tests/Unit/ArchitectureTest.php` enforces this. A module keeps its models, policies, Filament resources and migrations in its own folder (migrations via `loadMigrationsFrom`); factories stay in `database/factories`. Further registries (e.g. dashboard tiles) are added with their first use.
+- **Modules so far.** `Supply`: food and water categories. `Inventory`: products (later batches, locations, movements).
 - **Targets.** `App\Support\SupplyTargets` calculates the target amount per category from the household size and target days, reading only the `CategoryRegistry`.
 - **Categories.** The supply module registers the food and water categories with the BLE values. `CategorySeeder` syncs them into the `categories` table; the container runs `migrate --seed` on every start, so `DatabaseSeeder` must stay idempotent and never create demo data (that is `DemoSeeder`).
 

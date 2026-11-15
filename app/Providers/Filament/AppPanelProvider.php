@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Support\InitialsAvatarProvider;
 use App\Http\Middleware\SetLocale;
+use App\Registries\NavigationRegistry;
 use App\Support\Palette;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
@@ -33,6 +34,9 @@ class AppPanelProvider extends PanelProvider
             ->colors(Palette::filament())
             ->defaultAvatarProvider(InitialsAvatarProvider::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
+            // Modules register their resources and pages in the NavigationRegistry.
+            ->resources(app(NavigationRegistry::class)->resources())
+            ->pages(app(NavigationRegistry::class)->pages())
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
