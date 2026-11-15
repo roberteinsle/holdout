@@ -2,26 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Enums\MemberType;
-use App\Models\Household;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+/**
+ * Runs on every container start (AUTORUN_LARAVEL_MIGRATION_SEED), so it must be
+ * idempotent and must never create demo data. Demo data: DemoSeeder.
+ */
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Local demo data: one household (2 adults, 1 child) with two people using the app.
-     */
     public function run(): void
     {
-        $household = Household::factory()->create(['name' => 'Demo household', 'locale' => 'de']);
-        $household->setMemberCount(MemberType::Adult, 2);
-        $household->setMemberCount(MemberType::Child, 1);
-
-        User::factory()->for($household)->create(['name' => 'Alex']);
-        User::factory()->for($household)->create(['name' => 'Sam']);
+        $this->call(CategorySeeder::class);
     }
 }

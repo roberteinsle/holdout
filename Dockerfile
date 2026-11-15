@@ -41,6 +41,7 @@ FROM base
 # worker, logs to the container output. All can be overridden in the compose file.
 ENV AUTORUN_ENABLED=true \
     AUTORUN_LARAVEL_MIGRATION=true \
+    AUTORUN_LARAVEL_MIGRATION_SEED=true \
     PHP_OPCACHE_ENABLE=1 \
     APP_ENV=production \
     APP_DEBUG=false \

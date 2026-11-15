@@ -8,6 +8,7 @@ Holdout is a mobile-first web app that helps families build and keep an emergenc
 
 - [Installation](Installation.md): run Holdout at home with Docker and Portainer, HTTPS, emergency power, backups
 - [Household](Household.md): household size, target days, "eat soon" window, language
+- [Categories](Categories.md): food and water categories and the daily need per person (BLE values)
 - [Family](Family.md): household setup, "Who are you?", managing people
 - [Design](Design.md): colours and contrast rules
 - [Development](Development.md): local setup, tests, conventions, documentation workflow

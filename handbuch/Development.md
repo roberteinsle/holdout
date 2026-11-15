@@ -16,10 +16,11 @@ docker compose up -d                        # app on http://localhost:8080
 docker compose exec app composer install
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate --seed
+docker compose exec app php artisan db:seed --class=DemoSeeder
 npm ci && npm run build
 ```
 
-The database is `database/database.sqlite`. The seeder creates a demo household with two people.
+The database is `database/database.sqlite`. `DemoSeeder` creates a demo household with two people.
 
 ## Tests and code style
 
@@ -39,6 +40,9 @@ CI runs Pint in test mode and the test suite on every push and pull request.
 - No personal data of the maintainer in the repository (code, docs, commits, issues).
 
 ## Architecture notes
+
+- **Modules and registries.** Features are split into modules in `app/Modules/<Name>/`, each with a service provider listed in `bootstrap/providers.php`. Modules register their parts in the registries in `app/Registries/` (e.g. `CategoryRegistry`). Core code and other modules only read from the registries and never use a module directly; `tests/Unit/ArchitectureTest.php` enforces this. Further registries (dashboard tiles, navigation) are added with their first use.
+- **Categories.** The supply module registers the food and water categories with the BLE values. `CategorySeeder` syncs them into the `categories` table; the container runs `migrate --seed` on every start, so `DatabaseSeeder` must stay idempotent and never create demo data (that is `DemoSeeder`).
 
 - **Home network, no sign-in.** The app is never exposed to the internet. Laravel's auth guard is still used to remember which person uses a device ("Who are you?" logs that person in with a remember-me cookie), so Filament and the history work as usual. People have no email or password.
 - **One container, SQLite.** The image defaults to SQLite in `storage/app/data`, synchronous queue and logs to stderr. The stack starts the container as root: `docker/entrypoint.d/40-holdout-data.sh` switches `www-data` to `PUID`/`PGID` when set (otherwise uid 82), hands it the data folder and creates the database and `app.key` on first start; the image is built world-readable (not writable) so the app works under any UID; `60-holdout-permissions.sh` fixes ownership after the Laravel automations. PHP-FPM and nginx workers run unprivileged. `config/app.php` reads the key from the file when `APP_KEY` is not set.

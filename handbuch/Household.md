@@ -15,7 +15,7 @@ The **Household** page holds the settings everything else is calculated from. Ev
 
 Count everyone who lives in the household and would eat from the supply, including small children. This is not the same as the [Family](Family.md) list, which only contains the people who use the app.
 
-The amounts needed per category (for example water, grains, vegetables) are calculated from the number of adults and children and the target days. The values per person and day, and how children are counted, follow the official German guidance and are documented together with the food categories.
+The amounts needed per category (for example water, grains, vegetables) are calculated from the number of adults and children and the target days. The values per person and day, and how children are counted, follow the official German guidance; see [Categories](Categories.md). Children means up to 12 years, as in that guidance.
 
 ## During setup
 

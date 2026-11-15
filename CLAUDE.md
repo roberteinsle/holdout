@@ -24,6 +24,12 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   People (`users`) have only a name. One household per installation; everyone may manage the family list.
 - Household size lives in `members` (type adult/child + count, per the roadmap), separate from the people
   who use the app; target days and the "eat soon" window are on `households`.
+- Modules live in `app/Modules/<Name>/` (service provider in `bootstrap/providers.php`) and register into the
+  registries in `app/Registries/` (`CategoryRegistry` so far; dashboard and navigation registries come with
+  their first use). Core and other modules only read registries; `tests/Unit/ArchitectureTest.php` enforces it.
+- Categories: the Supply module registers BLE values per person/day (children only differ for drinks).
+  `CategorySeeder` syncs them on every start (`migrate --seed`); `DatabaseSeeder` must stay idempotent, demo
+  data is `DemoSeeder`. Category names are English source strings; keep them in `lang/de.json`.
 - Emergency fallbacks matter more than the live app: printout (#13) and the PWA offline copy (#14).
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).
