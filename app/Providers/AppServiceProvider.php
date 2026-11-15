@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Filament\Support\ButtonComponent;
 use App\Registries\CategoryRegistry;
 use App\Registries\NavigationRegistry;
+use App\Registries\ProductLookupRegistry;
 use Filament\Support\View\Components\ButtonComponent as FilamentButtonComponent;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         // Registries: modules register into them, core features only read from them.
         $this->app->singleton(CategoryRegistry::class);
         $this->app->singleton(NavigationRegistry::class);
+        $this->app->singleton(ProductLookupRegistry::class);
     }
 
     /**

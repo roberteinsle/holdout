@@ -50,6 +50,8 @@ docker network create proxy
 | `HOLDOUT_DATA` | no | Data folder on the host, default `/volume1/docker/holdout` |
 | `PUID`, `PGID` | no | Owner of the data, default `1026` / `100` (see step 1) |
 | `APP_TAG` | no | Image tag, default `latest`; set to an older `sha-…` tag to roll back |
+| `OPENFOODFACTS_ENABLED` | no | `false` turns the barcode lookup in Open Food Facts off; default `true` |
+| `HOLDOUT_SOURCE_URL` | no | Link to your copy of the source code; added to the identification Holdout sends to Open Food Facts |
 
 5. Deploy. Holdout is now reachable at `http://<server-ip>:8090`.
 

@@ -35,4 +35,16 @@ return [
         ],
     ],
 
+    // Product lookup by barcode. No contact data in the User-Agent: set
+    // HOLDOUT_SOURCE_URL to add a link to your copy of the project.
+    'openfoodfacts' => [
+        'enabled' => (bool) env('OPENFOODFACTS_ENABLED', true),
+        'base_url' => env('OPENFOODFACTS_URL', 'https://world.openfoodfacts.org'),
+        'user_agent' => 'Holdout/0.1 (self-hosted family emergency supply app'.(env('HOLDOUT_SOURCE_URL') ? '; '.env('HOLDOUT_SOURCE_URL') : '').')',
+        'timeout' => (int) env('OPENFOODFACTS_TIMEOUT', 5),
+        'requests_per_minute' => (int) env('OPENFOODFACTS_REQUESTS_PER_MINUTE', 30),
+        'cache_days' => 30,
+        'not_found_cache_days' => 7,
+    ],
+
 ];

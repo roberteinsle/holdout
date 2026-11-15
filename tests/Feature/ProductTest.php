@@ -13,7 +13,10 @@ use App\Modules\Inventory\Filament\Resources\Products\ProductResource;
 use App\Modules\Inventory\Models\Product;
 use App\Registries\NavigationRegistry;
 use Database\Seeders\CategorySeeder;
+use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -119,6 +122,65 @@ class ProductTest extends TestCase
 
         Livewire::test(EditProduct::class, ['record' => $mine->getRouteKey()])->callAction('delete');
         $this->assertModelMissing($mine);
+    }
+
+    public function test_leaving_the_barcode_field_fills_the_form_from_the_product_database(): void
+    {
+        Http::fake(['world.openfoodfacts.org/*' => Http::response(['status' => 1, 'product' => [
+            'product_name' => 'Spaghetti n.5', 'brands' => 'Barilla', 'product_quantity' => 500, 'product_quantity_unit' => 'g',
+            'categories_tags' => ['en:pastas'],
+        ]])]);
+
+        Livewire::test(CreateProduct::class)
+            ->fillForm(['barcode' => '8076800195057'])
+            ->assertSchemaStateSet([
+                'name' => 'Spaghetti n.5',
+                'brand' => 'Barilla',
+                'package_value' => 500.0,
+                'package_unit' => PackageUnit::Gram,
+                'category_id' => $this->category('grains')->id,
+            ])
+            ->assertNotified()
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame('8076800195057', Product::query()->sole()->barcode);
+    }
+
+    public function test_the_lookup_does_not_overwrite_what_was_typed_unless_asked(): void
+    {
+        Http::fake(['world.openfoodfacts.org/*' => Http::response(['status' => 1, 'product' => ['product_name' => 'From database', 'brands' => 'Brand']])]);
+
+        $page = Livewire::test(CreateProduct::class)
+            ->fillForm(['name' => 'My name', 'barcode' => '8076800195057'])
+            ->assertSchemaStateSet(['name' => 'My name']);
+
+        $page->callAction(TestAction::make('lookUp')->schemaComponent('barcode'))
+            ->assertSchemaStateSet(['name' => 'From database', 'brand' => 'Brand']);
+    }
+
+    public function test_an_upc_barcode_is_stored_with_13_digits(): void
+    {
+        Http::fake(['*' => Http::response(['status' => 0], 404)]);
+
+        Livewire::test(CreateProduct::class)
+            ->fillForm(['name' => 'Soup', 'category_id' => $this->category('vegetables')->id, 'package_value' => 400, 'package_unit' => 'g', 'barcode' => '036000291452'])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame('0036000291452', Product::query()->sole()->barcode);
+    }
+
+    public function test_when_the_product_database_is_offline_the_form_still_works(): void
+    {
+        Http::fake(fn () => throw new ConnectionException('offline'));
+
+        Livewire::test(CreateProduct::class)
+            ->fillForm(['barcode' => '8076800195057'])
+            ->assertNotified(__('The product database cannot be reached right now.'))
+            ->fillForm(['name' => 'Spaghetti', 'category_id' => $this->category('grains')->id, 'package_value' => 500, 'package_unit' => 'g'])
+            ->call('create')
+            ->assertHasNoFormErrors();
     }
 
     public function test_litres_count_like_kilograms_for_the_supply(): void

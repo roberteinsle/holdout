@@ -25,11 +25,13 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - Household size lives in `members` (type adult/child + count, per the roadmap), separate from the people
   who use the app; target days and the "eat soon" window are on `households` (no language there).
 - Modules live in `app/Modules/<Name>/` (service provider in `bootstrap/providers.php`) and register into the
-  registries in `app/Registries/` (`CategoryRegistry`, `NavigationRegistry` for Filament resources/pages; a
-  dashboard registry comes with its first use). Core and other modules only read registries;
+  registries in `app/Registries/` (`CategoryRegistry`, `NavigationRegistry` for Filament resources/pages,
+  `ProductLookupRegistry` for barcode data sources; a dashboard registry comes with its first use). Core and other modules only read registries;
   `tests/Unit/ArchitectureTest.php` enforces it. A module owns its models, policies (`Gate::policy`), Filament
   resources and migrations (`loadMigrationsFrom`); factories stay in `database/factories`.
-- Modules: `Supply` (categories), `Inventory` (products; batches, locations, movements follow). Package units
+- Modules: `Supply` (categories), `Inventory` (products; batches, locations, movements follow), `OpenFoodFacts`
+  (lookup via the registry; local cache 30 days / not found 7 days, stale cache when offline, 30 req/min, generic
+  User-Agent without contact data, `HOLDOUT_SOURCE_URL` optional). Barcodes: 13 digits (`App\Support\Barcode`). Package units
   g/kg/ml/l, converted to kg or l with 1 l = 1 kg. Lists are mobile first (details in the name column).
 - Categories: the Supply module registers BLE values per person/day (children only differ for drinks).
   `CategorySeeder` syncs them on every start (`migrate --seed`); `DatabaseSeeder` must stay idempotent, demo

@@ -8,14 +8,26 @@ Choose **Add product** and fill in:
 
 | Field | Required | Description |
 |---|---|---|
+| Barcode | no | The number under the barcode, 8 to 14 digits. Stored with 13 digits (UPC and EAN-8 codes get leading zeros). Must be unique within the household. |
 | Name | yes | e.g. "Spaghetti" (up to 150 characters) |
 | Brand | no | e.g. the manufacturer or store brand |
 | Category | yes | One of the [categories](Categories.md); decides which target the product counts towards |
 | Package size | yes | Amount in one package, e.g. `500` |
 | Unit | yes | `g`, `kg`, `ml` or `l` |
-| Barcode | no | The number under the barcode, 8 to 14 digits. Must be unique within the household. Scanning with the camera follows. |
 
 **Create & create another** keeps the form open for the next product.
+
+## Looking up a barcode
+
+Enter the barcode first. When you leave the field, Holdout looks the product up in [Open Food Facts](https://world.openfoodfacts.org), the free product database, and fills in name, brand, package size and, where it can tell, the category. It only fills fields that are still empty; the magnifier button next to the field looks the code up again and replaces what is there. Always check the result.
+
+- The name comes in your language if Open Food Facts has it.
+- If nothing is found, or Open Food Facts cannot be reached (no internet), enter the details by hand. The form always works.
+- Every answer is stored locally: a known product is looked up again only after 30 days, an unknown barcode after 7 days. Without internet, any stored answer is used, however old.
+- Only the barcode is sent to Open Food Facts, with a generic identification of the app and no personal data. At most 30 lookups per minute leave your installation.
+- Product data from Open Food Facts is available under the [Open Database License](https://opendatacommons.org/licenses/odbl/1-0/).
+
+Scanning the barcode with the phone camera follows.
 
 ## Litres and kilograms
 
