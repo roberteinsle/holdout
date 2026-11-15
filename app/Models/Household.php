@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MemberType;
 use Database\Factories\HouseholdFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,9 +15,42 @@ class Household extends Model
     /** @use HasFactory<HouseholdFactory> */
     use HasFactory;
 
+    public const LOCALES = ['de' => 'Deutsch', 'en' => 'English'];
+
+    protected function casts(): array
+    {
+        return [
+            'target_days' => 'integer',
+            'eat_soon_days' => 'integer',
+        ];
+    }
+
     /** @return HasMany<User, $this> */
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    /** @return HasMany<Member, $this> */
+    public function members(): HasMany
+    {
+        return $this->hasMany(Member::class);
+    }
+
+    public function memberCount(MemberType $type): int
+    {
+        return (int) $this->members->firstWhere('type', $type)?->count;
+    }
+
+    public function setMemberCount(MemberType $type, int $count): void
+    {
+        $this->members()->updateOrCreate(['type' => $type], ['count' => $count]);
+        $this->unsetRelation('members');
+    }
+
+    /** Total number of people the supply is planned for. */
+    public function memberTotal(): int
+    {
+        return (int) $this->members->sum('count');
     }
 }

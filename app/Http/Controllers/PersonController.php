@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MemberType;
 use App\Models\Household;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -65,6 +66,8 @@ class PersonController extends Controller
         $data = $request->validate([
             'household' => ['required', 'string', 'max:100'],
             'name' => ['required', 'string', 'max:100'],
+            'adults' => ['required', 'integer', 'min:1', 'max:30'],
+            'children' => ['required', 'integer', 'min:0', 'max:30'],
         ]);
 
         $user = DB::transaction(function () use ($data, $request) {
@@ -76,6 +79,8 @@ class PersonController extends Controller
                 'name' => $data['household'],
                 'locale' => $request->getPreferredLanguage(['de', 'en']) ?? 'de',
             ]);
+            $household->setMemberCount(MemberType::Adult, (int) $data['adults']);
+            $household->setMemberCount(MemberType::Child, (int) $data['children']);
 
             return $household->users()->create(['name' => $data['name']]);
         });

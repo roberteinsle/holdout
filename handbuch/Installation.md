@@ -87,7 +87,11 @@ Holdout is meant to help when things go wrong, so plan for power as well:
 
 ## Backups
 
-All data is in the data folder (`holdout.sqlite` and `app.key`). Back it up with your usual tool, e.g. Btrfs snapshots and Hyper Backup on a DiskStation, ideally also to an external drive. To restore, put both files back and start the container.
+All data is in the data folder (`holdout.sqlite` and `app.key`).
+
+Before every update that changes the database structure, the container saves a copy of the database to `backups/` in the data folder (`holdout-<date>-<time>.sqlite`) and keeps the newest 10 (change with `HOLDOUT_BACKUP_KEEP`). To go back, stop the stack, replace `holdout.sqlite` with a copy and start an image version from before the update.
+
+This does not replace a real backup: back up the whole data folder with your usual tool, e.g. Btrfs snapshots and Hyper Backup on a DiskStation, ideally also to an external drive. To restore, put both files back and start the container.
 
 ## Updates and rollback
 

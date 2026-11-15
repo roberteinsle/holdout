@@ -14,7 +14,7 @@ So that the history shows who used or bought something, each device asks once **
 
 ## Setting up the household
 
-On a fresh installation, every page leads to **Set up your household**: enter a name for the household and your own name. Afterwards, setup is closed; everyone else adds themselves on the "Who are you?" page, or someone adds them on the Family page.
+On a fresh installation, every page leads to **Set up your household**: enter a name for the household, your own name and how many adults and children live in the household (see [Household](Household.md)). Afterwards, setup is closed; everyone else adds themselves on the "Who are you?" page, or someone adds them on the Family page.
 
 ## The Family page
 

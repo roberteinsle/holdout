@@ -12,7 +12,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - One container, SQLite in `storage/app/data` (bind-mounted), sync queue, logs to stderr. The stack starts the
   container as root so `docker/entrypoint.d/40-holdout-data.sh` can switch www-data to `PUID`/`PGID`
   (Synology default 1026/100; otherwise uid 82), hand it the folder and create the database and `app.key` on
-  first start; `60-holdout-permissions.sh` fixes ownership after the Laravel automations. The image is built
+  first start; `45-holdout-backup.sh` copies the database to `backups/` before pending migrations (keeps 10);
+  `60-holdout-permissions.sh` fixes ownership after the Laravel automations. The image is built
   world-readable (`chmod -R u+rwX,go+rX,go-w`) so any UID can run it. PHP-FPM and nginx workers run
   unprivileged. `config/app.php` reads the key from that file when `APP_KEY` is unset. Proxies are trusted (`X-Forwarded-*`) for HTTPS via NPM.
 - Local: `docker compose up -d` (app on :8080, SQLite), then
@@ -21,6 +22,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - No sign-in, no accounts, no email. Each device picks a person on "Who are you?" (`/who`, route `login`),
   which logs that person in with a remember-me cookie, so Filament and the history know who acts.
   People (`users`) have only a name. One household per installation; everyone may manage the family list.
+- Household size lives in `members` (type adult/child + count, per the roadmap), separate from the people
+  who use the app; target days and the "eat soon" window are on `households`.
 - Emergency fallbacks matter more than the live app: printout (#13) and the PWA offline copy (#14).
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).

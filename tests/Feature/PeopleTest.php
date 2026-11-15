@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\MemberType;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\Household;
 use App\Models\User;
@@ -23,11 +24,14 @@ class PeopleTest extends TestCase
 
     public function test_setup_creates_the_household_and_selects_the_first_person(): void
     {
-        $this->post('/setup', ['household' => 'The Millers', 'name' => 'Alex'])->assertRedirect('/');
+        $this->post('/setup', ['household' => 'The Millers', 'name' => 'Alex', 'adults' => 2, 'children' => 1])->assertRedirect('/');
 
         $user = User::query()->sole();
         $this->assertSame('Alex', $user->name);
         $this->assertSame('The Millers', $user->household->name);
+        $this->assertSame(2, $user->household->memberCount(MemberType::Adult));
+        $this->assertSame(1, $user->household->memberCount(MemberType::Child));
+        $this->assertSame(14, $user->household->target_days);
         $this->assertAuthenticatedAs($user);
     }
 
@@ -36,14 +40,14 @@ class PeopleTest extends TestCase
         Household::factory()->create();
 
         $this->get('/setup')->assertRedirect('/who');
-        $this->post('/setup', ['household' => 'Second', 'name' => 'Eve'])->assertRedirect('/who');
+        $this->post('/setup', ['household' => 'Second', 'name' => 'Eve', 'adults' => 1, 'children' => 0])->assertRedirect('/who');
         $this->assertDatabaseCount('households', 1);
     }
 
     public function test_setup_validates_input(): void
     {
-        $this->post('/setup', ['household' => '', 'name' => str_repeat('x', 101)])
-            ->assertSessionHasErrors(['household', 'name']);
+        $this->post('/setup', ['household' => '', 'name' => str_repeat('x', 101), 'adults' => 0, 'children' => -1])
+            ->assertSessionHasErrors(['household', 'name', 'adults', 'children']);
     }
 
     public function test_a_device_picks_who_is_using_it_and_keeps_it(): void
