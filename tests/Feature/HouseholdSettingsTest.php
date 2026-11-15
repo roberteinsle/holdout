@@ -16,7 +16,7 @@ class HouseholdSettingsTest extends TestCase
 
     private function signedIn(): User
     {
-        $household = Household::factory()->create(['name' => 'The Millers', 'locale' => 'en', 'target_days' => 14, 'eat_soon_days' => 60]);
+        $household = Household::factory()->create(['name' => 'The Millers', 'target_days' => 14, 'eat_soon_days' => 60]);
         $household->setMemberCount(MemberType::Adult, 2);
         $household->setMemberCount(MemberType::Child, 1);
 
@@ -38,7 +38,6 @@ class HouseholdSettingsTest extends TestCase
             'children' => 1,
             'target_days' => 14,
             'eat_soon_days' => 60,
-            'locale' => 'en',
         ]);
     }
 
@@ -67,21 +66,8 @@ class HouseholdSettingsTest extends TestCase
         $this->signedIn();
 
         Livewire::test(HouseholdSettings::class)
-            ->fillForm(['name' => '', 'adults' => 0, 'children' => -1, 'target_days' => 0, 'eat_soon_days' => 400, 'locale' => 'fr'])
+            ->fillForm(['name' => '', 'adults' => 0, 'children' => -1, 'target_days' => 0, 'eat_soon_days' => 400])
             ->call('save')
-            ->assertHasFormErrors(['name', 'adults', 'children', 'target_days', 'eat_soon_days', 'locale']);
-    }
-
-    public function test_changing_the_language_reloads_the_page_in_that_language(): void
-    {
-        $user = $this->signedIn();
-
-        Livewire::test(HouseholdSettings::class)
-            ->fillForm(['locale' => 'de'])
-            ->call('save')
-            ->assertRedirect(HouseholdSettings::getUrl());
-
-        $this->get('/household')->assertSee('Für wen ist der Vorrat?');
-        $this->assertSame('de', $user->household->fresh()->locale);
+            ->assertHasFormErrors(['name', 'adults', 'children', 'target_days', 'eat_soon_days']);
     }
 }

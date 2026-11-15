@@ -36,7 +36,8 @@ CI runs Pint in test mode and the test suite on every push and pull request.
 - Every input is validated on the server; use validated data only.
 - Every route that calls an external API (e.g. Open Food Facts) or does expensive work has a rate limit.
 - No API keys or secrets in the frontend; `VITE_*` variables are public.
-- All UI text is translatable: English source strings with `__()`, German in `lang/de.json`.
+- All UI text is translatable: English source strings with `__()`, translations in `lang/{de,es,pt,fr}.json`. English is the main language and the fallback. `tests/Feature/LocaleTest.php` fails when a string (or a category name) is missing in one of the languages.
+- Laravel's own texts (validation messages etc.) come from [Laravel Lang](https://laravel-lang.com) (`laravel-lang/common`, dev dependency) and are committed in `lang/<locale>/`. Update them with `php artisan lang:update`; a new language with `php artisan lang:add <code>` plus an entry in `App\Support\Locales`.
 - No personal data of the maintainer in the repository (code, docs, commits, issues).
 
 ## Architecture notes

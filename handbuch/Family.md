@@ -12,6 +12,12 @@ So that the history shows who used or bought something, each device asks once **
 - Not in the list yet? Choose **Not in the list? Add yourself**, enter your name and continue.
 - To change who is using a device, open the menu at the top right and choose **Switch person**.
 
+## Profile and language
+
+Open the menu at the top right and choose **Profile** to change your name and the **language** of the app. Every person chooses their own language; it applies on every device where that person is selected.
+
+Available languages: English (the main language), Deutsch, Español, Português and Français. Until a person chooses one, the app uses the browser's language if it is one of these, otherwise English. The "Who are you?" and setup pages always follow the browser's language.
+
 ## Setting up the household
 
 On a fresh installation, every page leads to **Set up your household**: enter a name for the household, your own name and how many adults and children live in the household (see [Household](Household.md)). Afterwards, setup is closed; everyone else adds themselves on the "Who are you?" page, or someone adds them on the Family page.

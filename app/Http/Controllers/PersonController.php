@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\MemberType;
 use App\Models\Household;
 use App\Models\User;
+use App\Support\Locales;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,7 @@ class PersonController extends Controller
         ]);
 
         $household = Household::query()->firstOrFail();
-        $user = $household->users()->create(['name' => $data['name']]);
+        $user = $household->users()->create(['name' => $data['name'], 'locale' => Locales::fromBrowser($request)]);
 
         return $this->select($request, $user);
     }
@@ -75,14 +76,11 @@ class PersonController extends Controller
                 return null;
             }
 
-            $household = Household::query()->create([
-                'name' => $data['household'],
-                'locale' => $request->getPreferredLanguage(['de', 'en']) ?? 'de',
-            ]);
+            $household = Household::query()->create(['name' => $data['household']]);
             $household->setMemberCount(MemberType::Adult, (int) $data['adults']);
             $household->setMemberCount(MemberType::Child, (int) $data['children']);
 
-            return $household->users()->create(['name' => $data['name']]);
+            return $household->users()->create(['name' => $data['name'], 'locale' => Locales::fromBrowser($request)]);
         });
 
         if ($user === null) {

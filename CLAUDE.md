@@ -23,7 +23,7 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   which logs that person in with a remember-me cookie, so Filament and the history know who acts.
   People (`users`) have only a name. One household per installation; everyone may manage the family list.
 - Household size lives in `members` (type adult/child + count, per the roadmap), separate from the people
-  who use the app; target days and the "eat soon" window are on `households`.
+  who use the app; target days and the "eat soon" window are on `households` (no language there).
 - Modules live in `app/Modules/<Name>/` (service provider in `bootstrap/providers.php`) and register into the
   registries in `app/Registries/` (`CategoryRegistry`, `NavigationRegistry` for Filament resources/pages; a
   dashboard registry comes with its first use). Core and other modules only read registries;
@@ -39,7 +39,10 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - Emergency fallbacks matter more than the live app: printout (#13) and the PWA offline copy (#14).
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).
-- UI strings in English and German from the start (`__()` with English source, `lang/de.json`).
+- Languages: English (main, fallback), German, Spanish, Portuguese, French (`App\Support\Locales`). Every
+  person picks theirs on the Profile page (`users.locale`); otherwise the browser decides. UI strings are English
+  `__()` sources translated in `lang/{de,es,pt,fr}.json`; add every new string to all four (LocaleTest checks).
+  Laravel's own texts come from laravel-lang (dev dependency, committed in `lang/<locale>/`).
 - Colours: `app/Support/Palette.php` and `handbuch/Design.md`; never white text on signal orange.
 
 ## Rules

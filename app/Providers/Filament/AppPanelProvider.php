@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Profile;
 use App\Filament\Support\InitialsAvatarProvider;
 use App\Http\Middleware\SetLocale;
 use App\Registries\NavigationRegistry;
@@ -59,8 +60,12 @@ class AppPanelProvider extends PanelProvider
             ])
             // No sign-in on the home network: "log out" means "switch person".
             ->userMenuItems([
+                'profile' => Action::make('profile')
+                    ->label(fn (): string => __('Profile'))
+                    ->icon(Heroicon::OutlinedUserCircle)
+                    ->url(fn (): string => Profile::getUrl()),
                 'logout' => fn (Action $action): Action => $action
-                    ->label(__('Switch person'))
+                    ->label(fn (): string => __('Switch person'))
                     ->icon(Heroicon::OutlinedArrowsRightLeft),
             ]);
     }

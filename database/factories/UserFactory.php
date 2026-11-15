@@ -20,6 +20,7 @@ class UserFactory extends Factory
         return [
             'household_id' => Household::factory(),
             'name' => fake()->firstName(),
+            'locale' => 'en',
             'remember_token' => Str::random(10),
         ];
     }

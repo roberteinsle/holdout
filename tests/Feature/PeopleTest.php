@@ -32,6 +32,7 @@ class PeopleTest extends TestCase
         $this->assertSame(2, $user->household->memberCount(MemberType::Adult));
         $this->assertSame(1, $user->household->memberCount(MemberType::Child));
         $this->assertSame(14, $user->household->target_days);
+        $this->assertSame('en', $user->locale);
         $this->assertAuthenticatedAs($user);
     }
 

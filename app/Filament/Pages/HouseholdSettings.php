@@ -7,7 +7,6 @@ use App\Models\Household;
 use App\Support\SupplyTargets;
 use BackedEnum;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -21,8 +20,8 @@ use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Household settings: name, size (adults/children), target days, the
- * "eat soon" window and the language, plus the resulting target amount per
+ * Household settings: name, size (adults/children), target days and the
+ * "eat soon" window, plus the resulting target amount per
  * category (SupplyTargets, from the CategoryRegistry).
  */
 class HouseholdSettings extends Page
@@ -56,7 +55,6 @@ class HouseholdSettings extends Page
             'children' => $household->memberCount(MemberType::Child),
             'target_days' => $household->target_days,
             'eat_soon_days' => $household->eat_soon_days,
-            'locale' => $household->locale,
         ]);
     }
 
@@ -71,11 +69,6 @@ class HouseholdSettings extends Page
                             ->label(__('Household name'))
                             ->required()
                             ->maxLength(100),
-                        Select::make('locale')
-                            ->label(__('Language'))
-                            ->options(Household::LOCALES)
-                            ->required()
-                            ->selectablePlaceholder(false),
                     ]),
                 Section::make(__('Who is the supply for?'))
                     ->description(__('Everyone who lives in the household, including small children. The amounts you need are calculated from this.'))
@@ -161,7 +154,6 @@ class HouseholdSettings extends Page
         DB::transaction(function () use ($household, $data): void {
             $household->update([
                 'name' => $data['name'],
-                'locale' => $data['locale'],
                 'target_days' => (int) $data['target_days'],
                 'eat_soon_days' => (int) $data['eat_soon_days'],
             ]);
@@ -169,14 +161,7 @@ class HouseholdSettings extends Page
             $household->setMemberCount(MemberType::Child, (int) $data['children']);
         });
 
-        $localeChanged = $household->wasChanged('locale');
-
         Notification::make()->title(__('Saved.'))->success()->send();
-
-        if ($localeChanged) {
-            // Reload so the whole page switches to the new language.
-            $this->redirect(static::getUrl());
-        }
     }
 
     private function household(): Household

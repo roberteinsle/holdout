@@ -18,7 +18,6 @@ class HouseholdFactory extends Factory
         return [
             'name' => fake()->lastName().' household',
             'target_days' => 14,
-            'locale' => 'en',
             'eat_soon_days' => 60,
         ];
     }

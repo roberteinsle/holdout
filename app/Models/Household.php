@@ -9,13 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'target_days', 'locale', 'eat_soon_days'])]
+#[Fillable(['name', 'target_days', 'eat_soon_days'])]
 class Household extends Model
 {
     /** @use HasFactory<HouseholdFactory> */
     use HasFactory;
-
-    public const LOCALES = ['de' => 'Deutsch', 'en' => 'English'];
 
     protected function casts(): array
     {

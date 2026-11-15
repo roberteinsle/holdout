@@ -5,7 +5,6 @@ The **Household** page holds the settings everything else is calculated from. Ev
 | Setting | Default | Meaning |
 |---|---|---|
 | Household name | (from setup) | Shown in the app and on the printout |
-| Language | browser language at setup | Language of the app for everyone in the household (English or German) |
 | Adults | (from setup) | Number of adults living in the household |
 | Children | (from setup) | Number of children up to 12 years living in the household |
 | Target days | 14 | How many days the supply should last. The German Federal Office of Civil Protection and Disaster Assistance (BBK) recommends a supply for 10 days. |

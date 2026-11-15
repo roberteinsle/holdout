@@ -15,7 +15,7 @@ class SupplyTargetsTest extends TestCase
 
     private function household(int $adults, int $children, int $days): Household
     {
-        $household = Household::factory()->create(['target_days' => $days, 'locale' => 'en']);
+        $household = Household::factory()->create(['target_days' => $days]);
         $household->setMemberCount(MemberType::Adult, $adults);
         $household->setMemberCount(MemberType::Child, $children);
 
@@ -68,7 +68,7 @@ class SupplyTargetsTest extends TestCase
 
     public function test_the_household_page_asks_for_the_size_when_it_is_missing(): void
     {
-        $household = Household::factory()->create(['locale' => 'en']);
+        $household = Household::factory()->create();
         $this->actingAs(User::factory()->for($household)->create());
 
         $this->get('/household')->assertOk()->assertSee('Enter how many adults and children live in the household');

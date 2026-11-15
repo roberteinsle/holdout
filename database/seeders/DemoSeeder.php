@@ -18,7 +18,7 @@ class DemoSeeder extends Seeder
      */
     public function run(): void
     {
-        $household = Household::factory()->create(['name' => 'Demo household', 'locale' => 'de']);
+        $household = Household::factory()->create(['name' => 'Demo household']);
         $household->setMemberCount(MemberType::Adult, 2);
         $household->setMemberCount(MemberType::Child, 1);
 

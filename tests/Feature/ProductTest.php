@@ -28,7 +28,7 @@ class ProductTest extends TestCase
         parent::setUp();
 
         $this->seed(CategorySeeder::class);
-        $this->user = User::factory()->for(Household::factory()->state(['locale' => 'en']))->create();
+        $this->user = User::factory()->for(Household::factory())->create();
         $this->actingAs($this->user);
     }
 

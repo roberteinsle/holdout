@@ -15,7 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * A person in the household. There is no sign-in: each device picks who is
  * using it ("Who are you?") and remembers that person.
  */
-#[Fillable(['name'])]
+#[Fillable(['name', 'locale'])]
 #[Hidden(['remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
