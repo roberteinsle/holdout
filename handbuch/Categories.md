@@ -1,6 +1,6 @@
 # Categories
 
-Holdout sorts the supply into categories. Each category has an amount one person needs per day; together with the household size and the target days (see [Household](Household.md)) this gives the target amount per category.
+Holdout sorts the supply into categories. Each category has an amount one person needs per day; together with the household size and the target days (see [Household](Household.md)) this gives the target amount per category: (adults × need per adult + children × need per child) × target days.
 
 ## Values
 

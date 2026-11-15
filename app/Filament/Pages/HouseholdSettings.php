@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Enums\MemberType;
 use App\Models\Household;
+use App\Support\SupplyTargets;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
@@ -14,14 +15,15 @@ use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\EmbeddedSchema;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Household settings: name, size (adults/children), target days, the
- * "eat soon" window and the language. The supply targets are calculated
- * from household size and target days.
+ * "eat soon" window and the language, plus the resulting target amount per
+ * category (SupplyTargets, from the CategoryRegistry).
  */
 class HouseholdSettings extends Page
 {
@@ -87,6 +89,7 @@ class HouseholdSettings extends Page
                             ->maxValue(30),
                         TextInput::make('children')
                             ->label(MemberType::Child->getLabel())
+                            ->helperText(__('Up to 12 years, as in the BLE guidance'))
                             ->integer()
                             ->required()
                             ->minValue(0)
@@ -129,7 +132,25 @@ class HouseholdSettings extends Page
                             ->keyBindings(['mod+s']),
                     ]),
                 ]),
+            Section::make(fn (): string => __('What you need for :days days', ['days' => $this->household()->target_days]))
+                ->description(__('Calculated from the household size and the target days. Updated when you save.'))
+                ->schema([
+                    View::make('filament.pages.household-targets')
+                        ->viewData(fn (): array => $this->targetsViewData()),
+                ]),
         ]);
+    }
+
+    /** @return array<string, mixed> */
+    private function targetsViewData(): array
+    {
+        $household = $this->household()->fresh('members');
+
+        return [
+            'targets' => app(SupplyTargets::class)->for($household),
+            'days' => $household->target_days,
+            'people' => $household->memberTotal(),
+        ];
     }
 
     public function save(): void

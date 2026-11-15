@@ -30,6 +30,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - Categories: the Supply module registers BLE values per person/day (children only differ for drinks).
   `CategorySeeder` syncs them on every start (`migrate --seed`); `DatabaseSeeder` must stay idempotent, demo
   data is `DemoSeeder`. Category names are English source strings; keep them in `lang/de.json`.
+- Targets: `App\Support\SupplyTargets` = (adults × per adult + children × per child) × target days, from the
+  `CategoryRegistry` only; shown on the Household page.
 - Emergency fallbacks matter more than the live app: printout (#13) and the PWA offline copy (#14).
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).

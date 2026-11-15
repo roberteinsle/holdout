@@ -15,4 +15,4 @@ Holdout is a mobile-first web app that helps families build and keep an emergenc
 
 ## Status
 
-Version 0.1 is in progress. Available so far: household setup, household size and target days, and the family list. Stock tracking, barcode scanning, the dashboard, the shopping list, the printout and offline use on phones follow.
+Version 0.1 is in progress. Available so far: household setup, household size and target days with the resulting target amounts per category, and the family list. Stock tracking, barcode scanning, the dashboard, the shopping list, the printout and offline use on phones follow.
