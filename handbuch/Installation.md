@@ -17,9 +17,18 @@ There is no sign-in. Everyone who can reach the app on your network can use it; 
 
 ## 1. Prepare the server
 
-Create a folder for the data, e.g. `/volume1/docker/holdout` (on a DiskStation: File Station, inside the shared folder `docker`).
+Create a folder for the data, e.g. `/volume1/docker/holdout` (on a DiskStation: File Station, inside the shared folder `docker`). You do not need to change its owner or permissions.
 
-You do not need to change its owner: the container starts as root only to hand the folder to the app user (`www-data`, uid 82); PHP and the web server workers then run as that user. If the folder's own permissions still block the app user (for example Synology ACLs), the container stops with a message. On a DiskStation, then open File Station → the folder → Properties → Permission and give **Everyone** read/write on this folder; Holdout is reachable on your home network only.
+The container starts as root only to prepare this folder, then runs PHP and the web server workers unprivileged. With `PUID` and `PGID` (like linuxserver.io images) the app runs as a user of your server, so the database belongs to that user:
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `PUID` | `1026` | User ID that owns the data. On a Synology NAS, the first user created in DSM usually has 1026. |
+| `PGID` | `100` | Group ID. On a Synology NAS, the group `users` is 100. |
+
+To check the IDs of a DSM user, run `id <username>` via SSH. Choose a user who may write to the shared folder.
+
+If the app user still cannot write to the folder, the container stops with a message. Then pick a `PUID` with write access, or give that folder read/write for **Everyone** (DSM: File Station → the folder → Properties → Permission).
 
 Create the Docker network `proxy` once. Holdout and Nginx Proxy Manager share it (Portainer → Networks → Add network, or):
 
@@ -39,6 +48,7 @@ docker network create proxy
 | `APP_IMAGE` | yes | The image GitHub Actions publishes, e.g. `ghcr.io/<github-owner>/holdout` |
 | `HOLDOUT_PORT` | no | Host port for direct access, default `8090` |
 | `HOLDOUT_DATA` | no | Data folder on the host, default `/volume1/docker/holdout` |
+| `PUID`, `PGID` | no | Owner of the data, default `1026` / `100` (see step 1) |
 | `APP_TAG` | no | Image tag, default `latest`; set to an older `sha-…` tag to roll back |
 
 5. Deploy. Holdout is now reachable at `http://<server-ip>:8090`.

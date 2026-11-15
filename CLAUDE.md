@@ -10,10 +10,11 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   Portainer stack (`deploy/docker-compose.portainer.yml`), updated by Portainer's GitOps polling. This
   deliberately deviates from the GitHub → GHCR → Coolify deployment standard. No secrets in the image.
 - One container, SQLite in `storage/app/data` (bind-mounted), sync queue, logs to stderr. The stack starts the
-  container as root so `docker/entrypoint.d/40-holdout-data.sh` can hand the folder to www-data (uid 82) and
-  create the database and `app.key` on first start (`60-holdout-permissions.sh` fixes ownership after the
-  Laravel automations); PHP-FPM and nginx workers run unprivileged. `config/app.php`
-  reads the key from that file when `APP_KEY` is unset. Proxies are trusted (`X-Forwarded-*`) for HTTPS via NPM.
+  container as root so `docker/entrypoint.d/40-holdout-data.sh` can switch www-data to `PUID`/`PGID`
+  (Synology default 1026/100; otherwise uid 82), hand it the folder and create the database and `app.key` on
+  first start; `60-holdout-permissions.sh` fixes ownership after the Laravel automations. The image is built
+  world-readable (`chmod -R u+rwX,go+rX,go-w`) so any UID can run it. PHP-FPM and nginx workers run
+  unprivileged. `config/app.php` reads the key from that file when `APP_KEY` is unset. Proxies are trusted (`X-Forwarded-*`) for HTTPS via NPM.
 - Local: `docker compose up -d` (app on :8080, SQLite), then
   `docker compose exec app composer install` and `docker compose exec app php artisan migrate`.
 - Tests use in-memory SQLite (`phpunit.xml`). Before committing: `vendor/bin/pint` and `php artisan test`.

@@ -19,7 +19,10 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-interaction
 COPY . .
 RUN composer dump-autoload --optimize --no-dev \
- && php artisan filament:assets
+ && php artisan filament:assets \
+ && chmod -R u+rwX,go+rX,go-w /app
+# Readable (not writable) for any user, so the app also works when the start script
+# switches www-data to the host's PUID/PGID. The image contains no secrets.
 
 # --- Stage 2: frontend assets (Vite) ---
 # The Filament theme imports CSS from vendor/filament, so vendor comes from stage 1.
@@ -29,7 +32,8 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 COPY --from=vendor /app/vendor ./vendor
-RUN npm run build
+RUN npm run build \
+ && chmod -R u+rwX,go+rX,go-w public/build
 
 # --- Stage 3: runtime ---
 FROM base
@@ -51,4 +55,6 @@ COPY --chmod=755 docker/entrypoint.d/ /etc/entrypoint.d/
 USER www-data
 COPY --chown=www-data:www-data --from=vendor /app /var/www/html
 COPY --chown=www-data:www-data --from=assets /app/public/build /var/www/html/public/build
-RUN mkdir -p /var/www/html/storage/app/data
+# COPY creates public/build itself, without the stage's permissions.
+RUN mkdir -p /var/www/html/storage/app/data \
+ && chmod 755 /var/www/html/public/build

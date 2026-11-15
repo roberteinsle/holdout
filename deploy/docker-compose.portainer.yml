@@ -5,6 +5,8 @@
 #   APP_IMAGE     required, the image GitHub Actions pushes, e.g. ghcr.io/<github-owner>/holdout
 #   HOLDOUT_PORT  port on the host for direct access, default 8090 (http://<nas-ip>:8090)
 #   HOLDOUT_DATA  folder on the host for the data, default /volume1/docker/holdout
+#   PUID / PGID   host user and group that own the data, default 1026 / 100: the first
+#                 DSM user and the group "users" on a Synology NAS (check with `id` via SSH)
 #
 # Before the first start: create the data folder and the network "proxy" once
 # (shared with Nginx Proxy Manager), see handbuch/Installation.md.
@@ -13,9 +15,12 @@ services:
     image: ${APP_IMAGE:?Set APP_IMAGE, e.g. ghcr.io/<github-owner>/holdout}:${APP_TAG:-latest}
     pull_policy: always
     restart: unless-stopped
-    # Starts as root only to hand the data folder to the app user on start;
-    # PHP and the web server workers run as www-data.
+    # Starts as root only to switch the app user to PUID/PGID and hand it the data
+    # folder; PHP and the web server workers then run unprivileged.
     user: root
+    environment:
+      - PUID=${PUID:-1026}
+      - PGID=${PGID:-100}
     ports:
       - "${HOLDOUT_PORT:-8090}:8080"
     volumes:
