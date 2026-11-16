@@ -15,7 +15,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   first start; `45-holdout-backup.sh` copies the database to `backups/` before pending migrations (keeps 10);
   `60-holdout-permissions.sh` fixes ownership after the Laravel automations. The image is built
   world-readable (`chmod -R u+rwX,go+rX,go-w`) so any UID can run it. PHP-FPM and nginx workers run
-  unprivileged. `config/app.php` reads the key from that file when `APP_KEY` is unset. Proxies are trusted (`X-Forwarded-*`) for HTTPS via NPM.
+  unprivileged. `config/app.php` reads the key from that file when `APP_KEY` is unset. Proxies are trusted (`X-Forwarded-*`) for HTTPS via the DSM reverse proxy (Synology DDNS wildcard
+  certificate) or Nginx Proxy Manager; the name resolves locally (AdGuard Home / Pi-hole rewrite), no port forwarding.
 - Local: `docker compose up -d` (app on :8080, SQLite), then
   `docker compose exec app composer install` and `docker compose exec app php artisan migrate`.
 - Tests use in-memory SQLite (`phpunit.xml`). Before committing: `vendor/bin/pint` and `php artisan test`.
