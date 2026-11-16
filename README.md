@@ -2,7 +2,7 @@
 
 Mobile-first web app to build and maintain a family emergency food & water supply. Scan barcodes, track best-before dates, see how many days you'd last. Self-hosted, Laravel + Filament.
 
-**Status:** v0.1 in progress. Sign-in without passwords (passkeys, email links, authenticator app), family invitations, target amounts per category (BLE values), products with photos and barcode lookup, batches, storage locations, history, dashboard, shopping list, a paper printout and an offline copy on phones work.
+**Status:** v0.1 in progress. Sign-in without passwords (passkeys, email links, authenticator app), family invitations, target amounts per category (BLE values), products with photos and barcode lookup, batches, storage locations, history, dashboard, shopping list, equipment checklists (home pharmacy, power outage, documents, …) with a check log, a paper printout and an offline copy on phones work.
 
 ## Quick start
 

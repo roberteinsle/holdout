@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Filament\Pages\Profile;
 use App\Models\Household;
 use App\Models\User;
+use App\Modules\Equipment\Support\Suggestions;
 use App\Registries\CategoryRegistry;
 use App\Support\Locales;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -148,6 +149,11 @@ class LocaleTest extends TestCase
 
         foreach (app(CategoryRegistry::class)->all() as $category) {
             $keys[] = $category->name;
+        }
+
+        // Names of the suggested equipment items (translated when they are added).
+        foreach (Suggestions::names() as $name) {
+            $keys[] = $name;
         }
 
         return array_values(array_unique($keys));

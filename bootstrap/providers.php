@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Equipment\EquipmentServiceProvider;
 use App\Modules\Inventory\InventoryServiceProvider;
 use App\Modules\OpenFoodFacts\OpenFoodFactsServiceProvider;
 use App\Modules\Supply\SupplyServiceProvider;
@@ -12,5 +13,6 @@ return [
     SupplyServiceProvider::class,
     InventoryServiceProvider::class,
     OpenFoodFactsServiceProvider::class,
+    EquipmentServiceProvider::class,
     AppPanelProvider::class,
 ];

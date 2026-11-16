@@ -19,10 +19,11 @@ Holdout is a mobile-first web app that helps families build and keep an emergenc
 - [Offline copy](Offline.md): the copy of the supply every phone keeps for when the server is unreachable
 - [Locations](Locations.md): where the supply is kept
 - [History](History.md): taking packages out, and who changed what
+- [Equipment](Equipment.md): home pharmacy, power outage, hygiene, documents, cash, grab bag, fire safety: checklists with expiry dates and a check log
 - [Family](Family.md): household setup, owner and member roles, invitations, profile and language
 - [Design](Design.md): colours and contrast rules
 - [Development](Development.md): local setup, tests, conventions, documentation workflow
 
 ## Status
 
-Version 0.1 is in progress. Available so far: household setup, household size and target days with the resulting target amounts per category, products with barcode lookup and camera scanning, batches with best-before dates, storage locations, taking packages out with a history of who did what, the stock compared with the targets, the dashboard, the shopping list, the printout (paper emergency copy), the offline copy on phones, and the family list.
+Version 0.1 is in progress. Available so far: household setup, household size and target days with the resulting target amounts per category, products with barcode lookup and camera scanning, batches with best-before dates, storage locations, taking packages out with a history of who did what, the stock compared with the targets, the dashboard, the shopping list, the printout (paper emergency copy), the offline copy on phones, equipment checklists with a check log, sign-in without passwords, and family invitations.

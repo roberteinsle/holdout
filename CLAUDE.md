@@ -40,6 +40,12 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   openfoodfacts.org only, real images ≤ 2 MB, 15 s timeout). Files: private `data` disk = `storage/app/data` (app-storage volume), signed
   temporary URLs at `/files`; products keep their own photo copy in `product-images/` (+ `image_credit`). Barcodes: 13 digits (`App\Support\Barcode`). Package units
   g/kg/ml/l, converted to kg or l with 1 l = 1 kg. Lists are mobile first (details in the name column).
+- Equipment module (non-food): `EquipmentItem` per household with area (BBK: pharmacy, power, hygiene, documents,
+  cash, grab bag, fire, information, other), available, quantity, location, expiry, check interval (`next_check_on`
+  computed on save), `attention`; status = most urgent of Missing/Expired/NeedsAttention/CheckDue/ExpiresSoon (60 d)/OK,
+  `scopeWithStatus` must match `status()` (tested). Checks via `recordCheck()` into `equipment_checks` (log, read-only,
+  `user_id` nullOnDelete). `Support/Suggestions` = BBK items (English names, translated on add, `suggestion_key`
+  unique per household; names are checked by LocaleTest). Printout section `EquipmentSection` (sort 40).
 - Categories: the Supply module registers BLE values per person/day (children only differ for drinks), plus
   `other` without a daily need (`CategoryDefinition::hasTarget()` false: no target, never counted in days of supply).
   `CategorySeeder` syncs them on every start (`migrate --seed`); `DatabaseSeeder` must stay idempotent, demo

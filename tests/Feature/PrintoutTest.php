@@ -7,6 +7,7 @@ use App\Filament\Pages\Printout;
 use App\Models\Category;
 use App\Models\Household;
 use App\Models\User;
+use App\Modules\Equipment\Printout\EquipmentSection;
 use App\Modules\Inventory\Enums\PackageUnit;
 use App\Modules\Inventory\Models\Batch;
 use App\Modules\Inventory\Models\Location;
@@ -57,7 +58,7 @@ class PrintoutTest extends TestCase
     {
         $sections = array_map(fn ($section): string => $section::class, app(PrintoutRegistry::class)->sections());
 
-        $this->assertSame([SupplySection::class, EatFirstSection::class, StockSection::class], $sections);
+        $this->assertSame([SupplySection::class, EatFirstSection::class, StockSection::class, EquipmentSection::class], $sections);
     }
 
     public function test_the_printout_shows_supply_eat_first_and_stock_by_location(): void
