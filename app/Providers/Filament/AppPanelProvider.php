@@ -15,6 +15,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Icons\Heroicon;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -31,6 +32,11 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('')
             ->brandName('Holdout')
+            ->brandLogo(fn (): string => asset('logo.svg'))
+            ->darkModeBrandLogo(fn (): string => asset('logo-dark.svg'))
+            ->brandLogoHeight('2rem')
+            // Favicons, the iOS home-screen icon, theme colour and the manifest.
+            ->renderHook(PanelsRenderHook::HEAD_END, fn (): string => view('partials.head-icons')->render())
             ->viteTheme('resources/css/filament/app/theme.css')
             ->colors(Palette::filament())
             ->defaultAvatarProvider(InitialsAvatarProvider::class)
