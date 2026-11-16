@@ -50,7 +50,9 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   from `SupplyStatus`, rounded up to 0.1, with a share/copy text. Plurals use `trans_choice` with `|` keys in the JSON files (LocaleTest checks them too).
 - Emergency fallbacks matter more than the live app: printout (#13) and the PWA offline copy (#14).
   Printout = route `printout` outside the panel (`auth` + `SetLocale`), inline styles only, A4 black and white, status
-  written out; the menu page is `App\Filament\Pages\Printout` (`/print`).
+  written out; the menu page "Emergency copy" is `App\Filament\Pages\Printout` (`/print`). Offline copy = `public/sw.js`
+  (registered in `partials/head-icons` when signed in, HTTPS/localhost only): caches only `/printout` (header
+  `X-Holdout-Printout`), network first for pages, serves the copy with its banner when the server is unreachable.
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).
 - Languages: English (main, fallback), German, Spanish, Portuguese, French (`App\Support\Locales`). Every

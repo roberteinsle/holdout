@@ -4,11 +4,13 @@ When the power or the network is down, the app is gone too. The **printout** is 
 
 ## Printing
 
-Open **Printout** in the menu and tap **Open printout**. A plain page opens in a new tab, without the app around it; **Print** opens the print dialog (on a phone it can also save the copy as a PDF), **Back** returns to the app.
+Open **Emergency copy** in the menu and tap **Open printout**. A plain page opens in a new tab, without the app around it; **Print** opens the print dialog (on a phone it can also save the copy as a PDF), **Back** returns to the app.
 
 The copy is A4 portrait, black and white, with page numbers. Status is written out (EXPIRED, EAT SOON), never shown by colour only, so a cheap black-and-white printer is enough. It is in the language of the person who opens it, and the header shows the household name and the date and time it was made (**As of …**).
 
 Print a new copy after shopping, or at least every few months: the paper shows the stock at the time of printing.
+
+Phones also keep the same content as an [offline copy](Offline.md), which updates itself.
 
 ## What is on it
 
@@ -18,4 +20,4 @@ Print a new copy after shopping, or at least every few months: the paper shows t
 
 ## For developers
 
-The printable page is the route `printout` (`/printout`, `App\Http\Controllers\PrintoutController`), outside the Filament panel, behind `auth` and `SetLocale`. It uses inline styles only (`resources/views/printout/page.blade.php`), so it prints even without the built assets. The sections come from the `PrintoutRegistry` (`app/Registries/`): each implements `PrintSection` (`sort()`, `render(Household)` returning a view or `null` to leave it out). Core registers `App\Printout\SupplySection` (sort 10); the Inventory module registers `EatFirstSection` (20) and `StockSection` (30). A new module adds its own section by registering one there. The menu entry is the core page `App\Filament\Pages\Printout` (`/print`).
+The printable page is the route `printout` (`/printout`, `App\Http\Controllers\PrintoutController`), outside the Filament panel, behind `auth` and `SetLocale`. It uses inline styles only (`resources/views/printout/page.blade.php`), so it prints even without the built assets. The sections come from the `PrintoutRegistry` (`app/Registries/`): each implements `PrintSection` (`sort()`, `render(Household)` returning a view or `null` to leave it out). Core registers `App\Printout\SupplySection` (sort 10); the Inventory module registers `EatFirstSection` (20) and `StockSection` (30). A new module adds its own section by registering one there. The menu entry **Emergency copy** is the core page `App\Filament\Pages\Printout` (`/print`); it also shows the [offline copy](Offline.md) status. The same page is the offline copy that `public/sw.js` keeps on phones.

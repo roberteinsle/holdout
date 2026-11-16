@@ -58,7 +58,7 @@ docker network create proxy
 
 On the first start the container creates the database and an app key in the data folder and runs the database migrations. Open the address and **create your household** right away.
 
-The direct address over plain HTTP stays available on purpose: it is the emergency access if the HTTPS certificate ever expires (see below). Without HTTPS, everything works except the camera scanner and installing the app on phones.
+The direct address over plain HTTP stays available on purpose: it is the emergency access if the HTTPS certificate ever expires (see below). Without HTTPS, everything works except the camera scanner, installing the app on phones and the [offline copy](Offline.md).
 
 ## 3. HTTPS with Nginx Proxy Manager (recommended)
 
@@ -70,7 +70,7 @@ You need a domain whose DNS is hosted by a provider with an API (for example Clo
 2. In NPM, request a Let's Encrypt certificate for `holdout.<your-domain>` with the **DNS challenge** of your DNS provider.
 3. Add a proxy host: domain `holdout.<your-domain>`, forward to `holdout` port `8080` (the container name on the `proxy` network), with the certificate from step 2.
 4. In your router (or Pi-hole), add a **local DNS entry**: `holdout.<your-domain>` → IP address of the server. On a FRITZ!Box, also add the domain as an exception to the DNS rebind protection.
-5. Open `https://holdout.<your-domain>:8443` on a phone and add it to the home screen.
+5. Open `https://holdout.<your-domain>:8443` on every phone, choose who you are and add it to the home screen. From then on the phone keeps an [offline copy](Offline.md).
 
 Holdout trusts the `X-Forwarded-*` headers from the proxy, so all links use HTTPS.
 
@@ -86,7 +86,8 @@ Holdout is meant to help when things go wrong, so plan for power as well:
 - **Network:** put the **router and the Wi-Fi access point** on the UPS too. Otherwise the server keeps running but no phone can reach it.
 - **Backup power:** with a PV system in island mode or a power station, the server and network can run for days (together they typically draw 50–60 W). The UPS then bridges the switchover. Test it by switching off the grid supply.
 - **Phones:** keep power banks in your supply.
-- **Paper:** keep a current [printout](Printout.md) in your emergency folder. When the server is down, paper still works.
+- **Offline copy:** every phone that opened Holdout over HTTPS keeps an [offline copy](Offline.md) of the supply; check it on the **Emergency copy** page.
+- **Paper:** keep a current [printout](Printout.md) in your emergency folder. When the server and the phones are down, paper still works.
 
 ## Backups
 

@@ -35,6 +35,8 @@
         .tally { width: 28mm; }
         .tag { display: inline-block; margin-left: 3px; padding: 0 4px; border: 1px solid #000; border-radius: 3px; font-size: 7.5pt; font-weight: 700; text-transform: uppercase; background: #000; color: #fff; }
         .tag-light { background: #fff; color: #000; }
+        .offline { margin-bottom: 12px; padding: 8px 10px; border: 2px solid #000; border-radius: 6px; background: #f4f1ea; }
+        .offline[hidden] { display: none; }
         footer { margin-top: 16px; padding-top: 6px; border-top: 1px solid #000; font-size: 8.5pt; color: #444; }
         .toolbar { position: sticky; top: 0; display: flex; gap: 8px; justify-content: flex-end; padding: 8px 16px; background: #f4f1ea; border-bottom: 1px solid #bcae8b; }
         .toolbar a, .toolbar button { font: 600 11pt system-ui, sans-serif; padding: 8px 14px; border-radius: 8px; border: 1px solid #bcae8b; background: #fff; color: #000; text-decoration: none; cursor: pointer; }
@@ -49,6 +51,10 @@
         <button type="button" onclick="window.print()">{{ __('Print') }}</button>
     </nav>
     <main>
+        {{-- Switched on by the service worker when it serves this page as the offline copy (#14). --}}
+        <div class="offline" data-offline-banner hidden>
+            <strong>{{ __('Offline copy') }}</strong> · {{ __('The server cannot be reached. This is the copy saved on this device; it shows the stock as of the date above and cannot be changed.') }}
+        </div>
         <header>
             <div>
                 <img src="{{ asset('logo.svg') }}" alt="Holdout">

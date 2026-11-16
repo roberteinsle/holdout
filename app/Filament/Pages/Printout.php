@@ -8,8 +8,8 @@ use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 
 /**
- * Printout: explains the paper emergency copy and opens the printable page
- * (route "printout", sections from the PrintoutRegistry).
+ * Emergency copy: opens the printable page (route "printout", sections from the
+ * PrintoutRegistry) and shows the offline copy on this device (public/sw.js, #14).
  */
 class Printout extends Page
 {
@@ -23,12 +23,12 @@ class Printout extends Page
 
     public static function getNavigationLabel(): string
     {
-        return __('Printout');
+        return __('Emergency copy');
     }
 
     public function getTitle(): string
     {
-        return __('Printout');
+        return __('Emergency copy');
     }
 
     protected function getHeaderActions(): array
