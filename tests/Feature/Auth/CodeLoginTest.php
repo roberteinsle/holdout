@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Filament\Pages\Security;
+use App\Filament\Pages\Profile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -40,7 +40,7 @@ class CodeLoginTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user)->withSession(['auth.password_confirmed_at' => time()]);
 
-        $page = Livewire::test(Security::class)
+        $page = Livewire::test(Profile::class)
             ->call('startTotpSetup')
             ->assertSet('totpQrCode', fn ($qr) => str_starts_with($qr, 'data:image/svg+xml;base64,'));
 
@@ -63,7 +63,7 @@ class CodeLoginTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        Livewire::test(Security::class)->call('startTotpSetup')->assertSet('totpQrCode', null);
+        Livewire::test(Profile::class)->call('startTotpSetup')->assertSet('totpQrCode', null);
         $this->assertNull(session('totp.pending_secret'));
     }
 

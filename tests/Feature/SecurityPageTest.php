@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Pages\Security;
+use App\Filament\Pages\Profile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
@@ -31,7 +31,7 @@ class SecurityPageTest extends TestCase
 
         $this->actingAs($user);
 
-        Livewire::test(Security::class)
+        Livewire::test(Profile::class)
             ->call('startTotpSetup')
             ->assertDispatched('holdout-confirm-passkey', method: 'startTotpSetup', arguments: [])
             ->assertSet('totpQrCode', null);
@@ -41,7 +41,7 @@ class SecurityPageTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        Livewire::test(Security::class)
+        Livewire::test(Profile::class)
             ->call('startTotpSetup')
             ->assertNotDispatched('holdout-confirm-passkey')
             ->assertNotified();

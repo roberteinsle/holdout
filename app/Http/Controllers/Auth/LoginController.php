@@ -81,7 +81,7 @@ class LoginController extends Controller
         $request->session()->passwordConfirmed();
 
         if (! $user->hasPasskeysEnabled()) {
-            return redirect()->route('filament.app.pages.security', ['welcome' => 1]);
+            return redirect()->route('filament.app.pages.profile', ['welcome' => 1]);
         }
 
         return redirect()->intended('/');

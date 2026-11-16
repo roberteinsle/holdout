@@ -19,7 +19,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   answer for unknown addresses), authenticator app (TOTP) as backup with recovery codes. Changing sign-in methods
   needs a recent sign-in (`auth.password_confirmed_at`); passkey, magic-link and code sign-ins all set it.
   One household per installation: the first person registers (with household size) and becomes owner; others
-  join by invitation (7 days). Roles owner/member via policies. Mail is queued (worker).
+  join by invitation (7 days). Roles owner/member via policies. Mail is queued (worker). Name, language and
+  sign-in methods are on one page, `App\Filament\Pages\Profile` (`/profile`, user menu, not in the navigation).
 - In an emergency only offline processes count (printout, offline copy on phones); the live app is for managing
   the supply in normal times.
 - Household size lives in `members` (type adult/child + count, per the roadmap), separate from the people

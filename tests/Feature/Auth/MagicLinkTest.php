@@ -56,7 +56,7 @@ class MagicLinkTest extends TestCase
         $this->assertGuest();
 
         $this->post(route('login.consume', $token))
-            ->assertRedirect(route('filament.app.pages.security', ['welcome' => 1]));
+            ->assertRedirect(route('filament.app.pages.profile', ['welcome' => 1]));
         $this->assertAuthenticatedAs($user);
 
         auth()->logout();

@@ -47,7 +47,7 @@ class InvitationTest extends TestCase
         $this->get(route('invitations.show', $token))->assertOk()->assertSee($owner->household->name);
 
         $this->post(route('invitations.accept', $token), ['name' => 'Alex Miller'])
-            ->assertRedirect(route('filament.app.pages.security', ['welcome' => 1]));
+            ->assertRedirect(route('filament.app.pages.profile', ['welcome' => 1]));
 
         $member = User::query()->where('email', 'alex@example.com')->sole();
         $this->assertAuthenticatedAs($member);

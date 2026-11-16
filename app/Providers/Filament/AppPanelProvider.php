@@ -39,7 +39,7 @@ class AppPanelProvider extends PanelProvider
             ->brandLogoHeight('2rem')
             // Favicons, the iOS home-screen icon, theme colour and the manifest.
             ->renderHook(PanelsRenderHook::HEAD_END, fn (): string => view('partials.head-icons')->render())
-            // Passkeys on the "Sign-in & security" page.
+            // Passkeys on the profile page.
             ->renderHook(PanelsRenderHook::BODY_END, fn (): string => Blade::render("@vite('resources/js/passkeys.js')"))
             ->viteTheme('resources/css/filament/app/theme.css')
             ->colors(Palette::filament())

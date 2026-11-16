@@ -8,7 +8,7 @@ Holdout has no passwords. People sign in with one of three methods:
 | **Email link** | First sign-in, new device, or when no passkey is available |
 | **Authenticator app** | Backup when neither a passkey nor email works |
 
-Every user manages their methods on the page **Sign-in & security**.
+Every user manages their methods on their **Profile** page (menu at the top right → **Profile**), below name and language.
 
 ## Email link
 
@@ -24,7 +24,7 @@ After the first sign-in, Holdout suggests setting up a passkey.
 
 ## Passkeys
 
-On **Sign-in & security**, enter a name for the device (for example "My phone") and choose **Add passkey**. The browser or password manager then stores the passkey.
+On the **Profile** page, enter a name for the device (for example "My phone") and choose **Add passkey**. The browser or password manager then stores the passkey.
 
 To sign in, choose **Sign in with passkey** on the sign-in page. Browsers that support it also offer saved passkeys directly in the email field.
 
@@ -36,7 +36,7 @@ A backup for when you cannot use a passkey and email does not arrive. It works w
 
 ### Set up
 
-1. On **Sign-in & security**, choose **Set up authenticator app**.
+1. On the **Profile** page, choose **Set up authenticator app**.
 2. Scan the QR code with the app, or type in the key shown below it.
 3. Enter the 6-digit code the app shows and choose **Confirm**.
 4. Holdout shows 8 **recovery codes**. Print them or write them down and put them in your emergency folder. They are shown only once.

@@ -1,4 +1,11 @@
 <x-filament-panels::page>
+    <x-filament::section>
+        <form wire:submit="save" class="space-y-4">
+            {{ $this->form }}
+            <x-filament::button type="submit">{{ __('Save') }}</x-filament::button>
+        </form>
+    </x-filament::section>
+
     {{-- Re-confirm with a passkey when the last sign-in is too old, then repeat the action. --}}
     <div
         x-data

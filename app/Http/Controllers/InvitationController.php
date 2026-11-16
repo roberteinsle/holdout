@@ -55,6 +55,6 @@ class InvitationController extends Controller
         // A fresh email-link sign-in counts as confirmation for adding passkeys.
         $request->session()->passwordConfirmed();
 
-        return redirect()->route('filament.app.pages.security', ['welcome' => 1]);
+        return redirect()->route('filament.app.pages.profile', ['welcome' => 1]);
     }
 }

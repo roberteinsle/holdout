@@ -34,6 +34,6 @@ Owners can remove a member on the **Family** page. The member's account, passkey
 
 ## Profile and language
 
-Open the menu at the top right and choose **Profile** to change your name and the **language** of the app. Every person chooses their own language.
+Open the menu at the top right and choose **Profile** to change your name and the **language** of the app, and to manage how you sign in (passkeys, authenticator app; see [Sign-in and security](Sign-in-and-security.md)). Every person chooses their own language.
 
 Available languages: English (the main language), Deutsch, Español, Português and Français. Until a person chooses one, the app uses the browser's language if it is one of these, otherwise English. The sign-in pages always follow the browser's language.
