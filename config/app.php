@@ -97,9 +97,7 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    // Without APP_KEY, use the key the container created on first start
-    // (docker/entrypoint.d/40-holdout-data.sh), kept next to the database.
-    'key' => env('APP_KEY') ?: (is_readable($keyFile = storage_path('app/data/app.key')) ? trim((string) file_get_contents($keyFile)) : null),
+    'key' => env('APP_KEY'),
 
     'previous_keys' => [
         ...array_filter(

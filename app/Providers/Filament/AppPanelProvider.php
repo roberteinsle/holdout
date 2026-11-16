@@ -22,6 +22,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AppPanelProvider extends PanelProvider
@@ -38,6 +39,8 @@ class AppPanelProvider extends PanelProvider
             ->brandLogoHeight('2rem')
             // Favicons, the iOS home-screen icon, theme colour and the manifest.
             ->renderHook(PanelsRenderHook::HEAD_END, fn (): string => view('partials.head-icons')->render())
+            // Passkeys on the "Sign-in & security" page.
+            ->renderHook(PanelsRenderHook::BODY_END, fn (): string => Blade::render("@vite('resources/js/passkeys.js')"))
             ->viteTheme('resources/css/filament/app/theme.css')
             ->colors(Palette::filament())
             ->defaultAvatarProvider(InitialsAvatarProvider::class)
@@ -65,15 +68,11 @@ class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            // No sign-in on the home network: "log out" means "switch person".
             ->userMenuItems([
                 'profile' => Action::make('profile')
                     ->label(fn (): string => __('Profile'))
                     ->icon(Heroicon::OutlinedUserCircle)
                     ->url(fn (): string => Profile::getUrl()),
-                'logout' => fn (Action $action): Action => $action
-                    ->label(fn (): string => __('Switch person'))
-                    ->icon(Heroicon::OutlinedArrowsRightLeft),
             ]);
     }
 }

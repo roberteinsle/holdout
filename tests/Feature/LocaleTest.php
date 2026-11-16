@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Registries\CategoryRegistry;
 use App\Support\Locales;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -20,13 +21,13 @@ class LocaleTest extends TestCase
     public static function guestLanguages(): array
     {
         return [
-            'English' => ['en-US,en;q=0.9', 'Who are you?'],
-            'German' => ['de-DE,de;q=0.9', 'Wer bist du?'],
-            'Spanish' => ['es-ES,es;q=0.9', '¿Quién eres?'],
-            'Portuguese' => ['pt-PT,pt;q=0.9', 'Quem és tu?'],
-            'Brazilian Portuguese' => ['pt-BR,pt;q=0.9', 'Quem és tu?'],
-            'French' => ['fr-FR,fr;q=0.9', 'Qui es-tu ?'],
-            'unsupported falls back to English' => ['it-IT,it;q=0.9', 'Who are you?'],
+            'English' => ['en-US,en;q=0.9', 'Sign in with passkey'],
+            'German' => ['de-DE,de;q=0.9', 'Mit Passkey anmelden'],
+            'Spanish' => ['es-ES,es;q=0.9', 'Iniciar sesión con passkey'],
+            'Portuguese' => ['pt-PT,pt;q=0.9', 'Iniciar sessão com passkey'],
+            'Brazilian Portuguese' => ['pt-BR,pt;q=0.9', 'Iniciar sessão com passkey'],
+            'French' => ['fr-FR,fr;q=0.9', 'Se connecter avec une passkey'],
+            'unsupported falls back to English' => ['it-IT,it;q=0.9', 'Sign in with passkey'],
         ];
     }
 
@@ -35,30 +36,30 @@ class LocaleTest extends TestCase
     {
         User::factory()->create();
 
-        $this->get('/who', ['Accept-Language' => $acceptLanguage])->assertOk()->assertSee($expected);
+        $this->get('/login', ['Accept-Language' => $acceptLanguage])->assertOk()->assertSee($expected);
     }
 
     public function test_people_get_the_language_from_their_profile(): void
     {
-        $user = User::factory()->create(['locale' => 'fr']);
+        $user = User::factory()->owner()->create(['locale' => 'fr']);
 
         $this->actingAs($user)
             ->get('/users', ['Accept-Language' => 'de-DE'])
             ->assertOk()
-            ->assertSee('Ajouter une personne');
+            ->assertSee('Inviter');
     }
 
     public function test_without_a_chosen_language_the_browser_decides(): void
     {
-        $user = User::factory()->create(['locale' => null]);
+        $user = User::factory()->owner()->create(['locale' => null]);
 
-        $this->actingAs($user)->get('/users', ['Accept-Language' => 'es-ES'])->assertSee('Añadir persona');
+        $this->actingAs($user)->get('/users', ['Accept-Language' => 'es-ES'])->assertSee('Invitar');
     }
 
     public function test_each_person_chooses_their_language_on_the_profile_page(): void
     {
         $household = Household::factory()->create();
-        $alex = User::factory()->for($household)->create(['name' => 'Alex', 'locale' => 'en']);
+        $alex = User::factory()->owner()->for($household)->create(['name' => 'Alex', 'locale' => 'en']);
         $sam = User::factory()->for($household)->create(['name' => 'Sam', 'locale' => 'en']);
 
         $this->actingAs($alex);
@@ -75,7 +76,7 @@ class LocaleTest extends TestCase
         $this->assertSame('Alexandra', $alex->fresh()->name);
         $this->assertSame('en', $sam->fresh()->locale);
 
-        $this->actingAs($alex->fresh())->get('/users')->assertSee('Adicionar pessoa');
+        $this->actingAs($alex->fresh())->get('/users')->assertSee('Convidar');
     }
 
     public function test_only_supported_languages_can_be_chosen(): void
@@ -99,10 +100,12 @@ class LocaleTest extends TestCase
             ->assertSee('muss ausgefüllt werden');
     }
 
-    public function test_setup_stores_the_browser_language_for_the_first_person(): void
+    public function test_registration_stores_the_browser_language_for_the_first_person(): void
     {
+        Mail::fake();
+
         $this->withHeader('Accept-Language', 'fr-FR')
-            ->post('/setup', ['household' => 'Famille', 'name' => 'Camille', 'adults' => 2, 'children' => 0]);
+            ->post('/register', ['household' => 'Famille', 'name' => 'Camille', 'email' => 'camille@example.com', 'adults' => 2, 'children' => 0]);
 
         $this->assertSame('fr', User::query()->sole()->locale);
     }

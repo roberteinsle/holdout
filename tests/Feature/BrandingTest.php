@@ -29,7 +29,7 @@ class BrandingTest extends TestCase
     {
         User::factory()->create();
 
-        $this->get('/who')
+        $this->get('/login')
             ->assertOk()
             ->assertSee('logo.svg')
             ->assertSee('logo-dark.svg')

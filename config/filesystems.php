@@ -38,7 +38,7 @@ return [
             'report' => false,
         ],
 
-        // The bind-mounted data folder (database, key, images). Private: files are
+        // Product photos and other app files (on the app-storage volume). Private: files are
         // served only through signed, temporary URLs at /files.
         'data' => [
             'driver' => 'local',

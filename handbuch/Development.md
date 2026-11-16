@@ -2,7 +2,7 @@
 
 ## Stack
 
-Laravel 13, Filament 5, PHP 8.5, SQLite (in production and in tests). Frontend assets are built with Vite and Tailwind CSS 4.
+Laravel 13, Filament 5, PHP 8.5, PostgreSQL in production and development, in-memory SQLite in tests (CI also runs the tests against PostgreSQL). Frontend assets are built with Vite and Tailwind CSS 4.
 
 The PHP version appears in exactly three places that change together: `Dockerfile` (`ARG PHP_VERSION`), `composer.json` and `.devcontainer/devcontainer.json`.
 
@@ -12,7 +12,7 @@ The devcontainer (GitHub Codespaces or VS Code) provides PHP, Composer, Node and
 
 ```bash
 cp .env.example .env
-docker compose up -d                        # app on http://localhost:8080
+docker compose up -d                        # app on http://localhost:8080 + PostgreSQL
 docker compose exec app composer install
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate --seed
@@ -20,7 +20,7 @@ docker compose exec app php artisan db:seed --class=DemoSeeder
 npm ci && npm run build
 ```
 
-The database is `database/database.sqlite`. `DemoSeeder` creates a demo household with two people.
+`DemoSeeder` creates a demo household with `owner@example.com` and `member@example.com`. With `MAIL_MAILER=log`, sign-in links appear in `storage/logs/laravel.log`.
 
 ## Tests and code style
 
@@ -45,14 +45,13 @@ CI runs Pint in test mode and the test suite on every push and pull request.
 - **Modules and registries.** Features are split into modules in `app/Modules/<Name>/`, each with a service provider listed in `bootstrap/providers.php`. Modules register their parts in the registries in `app/Registries/`: `CategoryRegistry` (supply categories), `NavigationRegistry` (Filament resources and pages, read by the panel provider) `ProductLookupRegistry` (product data sources by barcode, implementing `ProductLookup` and returning `ProductInfo`) `StockRegistry` (stock per category, implementing `StockSource` and returning `StockAmount` with usable and expired amounts) `DashboardRegistry` (Filament widgets on the dashboard; order from each widget's `$sort`; core registers `SupplyStatusWidget` itself) and `PrintoutRegistry` (sections of the paper emergency copy, implementing `PrintSection`; core registers `SupplySection` itself). Core code and other modules only read from the registries and never use a module directly; `tests/Unit/ArchitectureTest.php` enforces this. A module keeps its models, policies, Filament resources and migrations in its own folder (migrations via `loadMigrationsFrom`); factories stay in `database/factories`. Further registries are added with their first use.
 - **Modules so far.** `Supply`: food and water categories. `Inventory`: products (later batches, locations, movements). `OpenFoodFacts`: barcode lookup with a local cache (`off_cache`), rate limit and offline fallback; tests fake the HTTP calls.
 - **Scanner.** `resources/js/scanner.js` (zxing, loaded only on the Scan page via `@vite`) exposes `window.holdoutScanner`; the page waits for it, because the module may load after Alpine. Module views are loaded with `loadViewsFrom` (`inventory::scan`); the Filament theme also scans `app/Modules/**` for Tailwind classes.
-- **Files.** The `data` disk is the bind-mounted data folder; it is private and served only through signed temporary URLs at `/files` (Laravel's `serve` option). Product photos live in `product-images/`, Open Food Facts downloads in `off-images/`.
+- **Files.** The `data` disk (`storage/app/data`, on the `app-storage` volume) is private and served only through signed temporary URLs at `/files` (Laravel's `serve` option). Product photos live in `product-images/`, Open Food Facts downloads in `off-images/`.
 - **Barcodes** are normalized to 13 digits by `App\Support\Barcode`.
 - **Targets.** `App\Support\SupplyTargets` calculates the target amount per category from the household size and target days, reading only the `CategoryRegistry`. `App\Support\SupplyStatus` sets it against the stock from the `StockRegistry` (`CategoryStatus`: percent, days, missing, `StockLevel`) and gives the days of supply (the smallest category).
 - **Categories.** The supply module registers the food and water categories with the BLE values. `CategorySeeder` syncs them into the `categories` table; the container runs `migrate --seed` on every start, so `DatabaseSeeder` must stay idempotent and never create demo data (that is `DemoSeeder`).
 
-- **Home network, no sign-in.** The app is never exposed to the internet. Laravel's auth guard is still used to remember which person uses a device ("Who are you?" logs that person in with a remember-me cookie), so Filament and the history work as usual. People have no email or password.
-- **One container, SQLite.** The image defaults to SQLite in `storage/app/data`, synchronous queue and logs to stderr. The stack starts the container as root: `docker/entrypoint.d/40-holdout-data.sh` switches `www-data` to `PUID`/`PGID` when set (otherwise uid 82), hands it the data folder and creates the database and `app.key` on first start; the image is built world-readable (not writable) so the app works under any UID; `60-holdout-permissions.sh` fixes ownership after the Laravel automations. PHP-FPM and nginx workers run unprivileged. `config/app.php` reads the key from the file when `APP_KEY` is not set.
-- **Deployment** deviates from the GitHub → GHCR → Coolify standard: images are still built by GitHub Actions and pushed to GHCR, but they run as a Portainer stack at home, updated by Portainer's GitOps polling.
+- **Sign-in.** No passwords: passkeys (`laravel/passkeys`, `resources/js/passkeys.js`), email links (`LoginToken`, 15 minutes, single use, hashed) and an authenticator app (`App\Support\Totp`, encrypted secret, recovery codes). Changing sign-in methods needs a recent sign-in (`auth.password_confirmed_at`), which all three methods set. Invitations (`Invitation`, 7 days) let the owner add people.
+- **Deployment** follows the GitHub → GHCR → Coolify standard: `deploy/docker-compose.coolify.yml` (app + queue worker), PostgreSQL as a separate Coolify resource on the external `coolify` network, environment from Coolify. The container runs migrations and `CategorySeeder` on every start (`migrate --seed`).
 
 ## Documentation workflow
 

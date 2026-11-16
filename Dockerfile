@@ -37,25 +37,14 @@ RUN npm run build \
 
 # --- Stage 3: runtime ---
 FROM base
-# Defaults for the home-network setup: SQLite in the data volume, no queue
-# worker, logs to the container output. All can be overridden in the compose file.
+# Everything environment-specific (APP_KEY, database, mail) comes from Coolify.
 ENV AUTORUN_ENABLED=true \
     AUTORUN_LARAVEL_MIGRATION=true \
     AUTORUN_LARAVEL_MIGRATION_SEED=true \
-    PHP_OPCACHE_ENABLE=1 \
-    APP_ENV=production \
-    APP_DEBUG=false \
-    LOG_CHANNEL=stderr \
-    DB_CONNECTION=sqlite \
-    DB_DATABASE=/var/www/html/storage/app/data/holdout.sqlite \
-    SESSION_DRIVER=database \
-    CACHE_STORE=database \
-    QUEUE_CONNECTION=sync
-USER root
-COPY --chmod=755 docker/entrypoint.d/ /etc/entrypoint.d/
-USER www-data
+    PHP_OPCACHE_ENABLE=1
 COPY --chown=www-data:www-data --from=vendor /app /var/www/html
 COPY --chown=www-data:www-data --from=assets /app/public/build /var/www/html/public/build
-# COPY creates public/build itself, without the stage's permissions.
+# COPY creates public/build itself, without the stage's permissions. storage/app/data
+# holds product photos (on the app-storage volume).
 RUN mkdir -p /var/www/html/storage/app/data \
  && chmod 755 /var/www/html/public/build

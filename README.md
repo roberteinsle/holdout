@@ -1,18 +1,16 @@
 # holdout
 
-Mobile-first web app to build and maintain a family emergency food & water supply. Scan barcodes, track best-before dates, see how many days you'd last. Self-hosted on your home network, Laravel + Filament.
+Mobile-first web app to build and maintain a family emergency food & water supply. Scan barcodes, track best-before dates, see how many days you'd last. Self-hosted, Laravel + Filament.
 
-**Status:** v0.1 in progress. Household setup, target amounts per category (BLE values) and products with photos and barcode lookup in Open Food Facts, batches with best-before dates and camera scanning work; the dashboard follows.
+**Status:** v0.1 in progress. Sign-in without passwords (passkeys, email links, authenticator app), family invitations, target amounts per category (BLE values), products with photos and barcode lookup, batches, storage locations, history, dashboard, shopping list, a paper printout and an offline copy on phones work.
 
 ## Quick start
 
-Holdout runs at home, so it keeps working when the internet is down. On any always-on Docker host (e.g. a Synology DiskStation with Portainer):
+Holdout ships as a Docker image built by GitHub Actions. Deploy `deploy/docker-compose.coolify.yml` (app + queue worker) in Coolify with a separate PostgreSQL resource and an SMTP account, set the environment variables, open the site over HTTPS and create your household.
 
-1. Create a data folder (e.g. `/volume1/docker/holdout`) and the Docker network `proxy`.
-2. Deploy `deploy/docker-compose.portainer.yml` as a stack with `APP_IMAGE` set to the published image.
-3. Open `http://<server-ip>:8090` and create your household. No sign-in, no configuration.
+In an emergency, use the paper printout and the offline copy on your phone; they need no server.
 
-For the camera scanner and installing the app on phones, add HTTPS with Nginx Proxy Manager. Details: [Installation](handbuch/Installation.md) · [Development](handbuch/Development.md) · [Handbook](handbuch/Home.md)
+Details: [Installation](handbuch/Installation.md) · Development: [Development](handbuch/Development.md) · Full handbook: [handbuch/](handbuch/Home.md)
 
 ## License
 

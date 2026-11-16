@@ -7,22 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * People belong to a household. Holdout runs on the home network without
-     * sign-in, so people have no email address or password: each device just
-     * remembers who is using it.
+     * Users sign in with passkeys or magic links only, so the password column goes away.
      */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('household_id')->nullable()->after('id')->constrained()->cascadeOnDelete();
+            $table->string('role', 16)->default('member')->after('email');
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->dropUnique(['email']);
-        });
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['email', 'email_verified_at', 'password']);
+            $table->dropColumn('password');
         });
 
         Schema::dropIfExists('password_reset_tokens');
@@ -37,10 +32,9 @@ return new class extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->string('email')->nullable()->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->dropConstrainedForeignId('household_id');
+            $table->dropColumn('role');
         });
     }
 };

@@ -16,7 +16,7 @@ Each phone keeps its own copy, so open Holdout once on every phone of the family
 
 The **Emergency copy** page (menu) shows under **Offline copy on this device** whether this phone has a copy and when it was saved. **Update now** saves a fresh one right away.
 
-If it says **Not available here**, the page was opened over plain HTTP (e.g. `http://<server-ip>:8090`): browsers allow offline copies (service workers) only on HTTPS pages. Use the HTTPS address, or rely on the paper printout.
+If it says **Not available here**, the page was opened over plain HTTP: browsers allow offline copies (service workers) only on HTTPS pages. Use the HTTPS address, or rely on the paper printout.
 
 ## What it does not do
 

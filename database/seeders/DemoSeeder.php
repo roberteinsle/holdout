@@ -13,7 +13,7 @@ class DemoSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Local demo data: one household (2 adults, 1 child) with two people using the app.
+     * Local demo data: one household (2 adults, 1 child) with an owner and a member.
      * Run with: php artisan db:seed --class=DemoSeeder
      */
     public function run(): void
@@ -22,7 +22,8 @@ class DemoSeeder extends Seeder
         $household->setMemberCount(MemberType::Adult, 2);
         $household->setMemberCount(MemberType::Child, 1);
 
-        User::factory()->for($household)->create(['name' => 'Alex']);
-        User::factory()->for($household)->create(['name' => 'Sam']);
+        // Sign in with an email link; with MAIL_MAILER=log the link is in storage/logs.
+        User::factory()->owner()->for($household)->create(['name' => 'Alex', 'email' => 'owner@example.com']);
+        User::factory()->for($household)->create(['name' => 'Sam', 'email' => 'member@example.com']);
     }
 }

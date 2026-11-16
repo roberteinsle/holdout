@@ -5,24 +5,23 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 ## Stack and conventions
 - PHP 8.5 everywhere. The version lives in exactly three places, changed together:
   `Dockerfile` (`ARG PHP_VERSION`), `composer.json` (`"php": "^8.5"`), `.devcontainer/devcontainer.json`.
-- Runs on the home network, never exposed to the internet (it must work in a grid or internet outage).
-  GitHub Actions builds the image (`.github/workflows/build.yml`) and pushes it to GHCR; it runs as a
-  Portainer stack (`deploy/docker-compose.portainer.yml`), updated by Portainer's GitOps polling. This
-  deliberately deviates from the GitHub → GHCR → Coolify deployment standard. No secrets in the image.
-- One container, SQLite in `storage/app/data` (bind-mounted), sync queue, logs to stderr. The stack starts the
-  container as root so `docker/entrypoint.d/40-holdout-data.sh` can switch www-data to `PUID`/`PGID`
-  (Synology default 1026/100; otherwise uid 82), hand it the folder and create the database and `app.key` on
-  first start; `45-holdout-backup.sh` copies the database to `backups/` before pending migrations (keeps 10);
-  `60-holdout-permissions.sh` fixes ownership after the Laravel automations. The image is built
-  world-readable (`chmod -R u+rwX,go+rX,go-w`) so any UID can run it. PHP-FPM and nginx workers run
-  unprivileged. `config/app.php` reads the key from that file when `APP_KEY` is unset. Proxies are trusted (`X-Forwarded-*`) for HTTPS via the DSM reverse proxy (Synology DDNS wildcard
-  certificate) or Nginx Proxy Manager; the name resolves locally (AdGuard Home / Pi-hole rewrite), no port forwarding.
-- Local: `docker compose up -d` (app on :8080, SQLite), then
-  `docker compose exec app composer install` and `docker compose exec app php artisan migrate`.
-- Tests use in-memory SQLite (`phpunit.xml`). Before committing: `vendor/bin/pint` and `php artisan test`.
-- No sign-in, no accounts, no email. Each device picks a person on "Who are you?" (`/who`, route `login`),
-  which logs that person in with a remember-me cookie, so Filament and the history know who acts.
-  People (`users`) have only a name. One household per installation; everyone may manage the family list.
+- Production: GitHub Actions builds the image (`.github/workflows/build.yml`) and pushes it to GHCR; Coolify
+  only pulls (`deploy/docker-compose.coolify.yml`: app + queue worker for mail) and is triggered by the deploy
+  webhook (POST) when `AUTO_DEPLOY=true`. PostgreSQL is a separate Coolify resource (never in the compose file),
+  reached over the external `coolify` network. No secrets in the image; environment comes from Coolify. The
+  container runs `migrate --seed` on every start. Product photos live on the `app-storage` volume. Proxies are
+  trusted (`X-Forwarded-*`) for HTTPS behind Coolify's proxy.
+- Local: `docker compose up -d` (app on :8080 + PostgreSQL), then
+  `docker compose exec app composer install` and `docker compose exec app php artisan migrate --seed`.
+- Tests use in-memory SQLite (`phpunit.xml`); CI also runs them against PostgreSQL. Before committing:
+  `vendor/bin/pint` and `php artisan test`.
+- Sign-in without passwords: passkeys (`laravel/passkeys`), magic link (15 min, single use, hashed tokens, same
+  answer for unknown addresses), authenticator app (TOTP) as backup with recovery codes. Changing sign-in methods
+  needs a recent sign-in (`auth.password_confirmed_at`); passkey, magic-link and code sign-ins all set it.
+  One household per installation: the first person registers (with household size) and becomes owner; others
+  join by invitation (7 days). Roles owner/member via policies. Mail is queued (worker).
+- In an emergency only offline processes count (printout, offline copy on phones); the live app is for managing
+  the supply in normal times.
 - Household size lives in `members` (type adult/child + count, per the roadmap), separate from the people
   who use the app; target days and the "eat soon" window are on `households` (no language there).
 - Modules live in `app/Modules/<Name>/` (service provider in `bootstrap/providers.php`) and register into the
@@ -37,7 +36,7 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - Modules: `Supply` (categories), `Inventory` (products; batches = packages + best-before date, status from `eat_soon_days`; locations per household, optional on a batch, `nullOnDelete`; movements = history: `BatchObserver` records added/corrected via `StockLedger`, take-out goes through `StockLedger::takeOut()` (saves quietly, deletes empty batches), read-only, `user_id`/`batch_id` `nullOnDelete`), `OpenFoodFacts`
   (lookup via the registry; local cache 30 days / not found 7 days, stale cache when offline, 30 req/min, generic
   User-Agent without contact data, `HOLDOUT_SOURCE_URL` optional; downloads the front photo once, https on
-  openfoodfacts.org only, real images ≤ 2 MB, 15 s timeout). Files: private `data` disk = data folder, signed
+  openfoodfacts.org only, real images ≤ 2 MB, 15 s timeout). Files: private `data` disk = `storage/app/data` (app-storage volume), signed
   temporary URLs at `/files`; products keep their own photo copy in `product-images/` (+ `image_credit`). Barcodes: 13 digits (`App\Support\Barcode`). Package units
   g/kg/ml/l, converted to kg or l with 1 l = 1 kg. Lists are mobile first (details in the name column).
 - Categories: the Supply module registers BLE values per person/day (children only differ for drinks), plus

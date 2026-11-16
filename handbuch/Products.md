@@ -34,7 +34,7 @@ A photo makes products easier to recognise at the shelf. The list shows it as a 
 
 - When a barcode is found in Open Food Facts, Holdout downloads the product's front photo once on the server and gives the product its own copy. Photos from Open Food Facts are licensed CC BY-SA; the product page shows "Photo: Open Food Facts (CC BY-SA)" below them.
 - Your own photo replaces it; removing or replacing a photo deletes the old file, deleting a product deletes its photo.
-- Photos are stored in the data folder (`product-images/`, downloaded originals in `off-images/`), so they work without internet and are part of your backup. They are only shown through signed, temporary links, never publicly.
+- Photos are stored on the server (`storage/app/data/product-images/`, downloaded originals in `off-images/`, on the `app-storage` volume), so they do not depend on Open Food Facts staying available. They are only shown through signed, temporary links, never publicly.
 - Only photos from `openfoodfacts.org` addresses are downloaded, only real JPEG, PNG or WebP images up to 2 MB. The phones never contact Open Food Facts themselves.
 
 To scan a barcode with the phone camera instead of typing it, use the [Scan](Scanning.md) page.

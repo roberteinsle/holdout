@@ -7,7 +7,7 @@
     <meta name="color-scheme" content="light dark">
     <title>{{ $title ?? config('app.name') }}</title>
     @include('partials.head-icons')
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/passkeys.js'])
 </head>
 <body class="min-h-screen bg-page text-fg antialiased">
     <main class="mx-auto flex min-h-screen w-full max-w-sm flex-col justify-center px-4 py-10">

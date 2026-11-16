@@ -44,5 +44,5 @@ All files are in `public/`:
 
 - Filament panel: hand-built palettes in `app/Support/Palette.php`. Filament's `Color::hex()` keeps only the hue and would turn the muted olive into a bright yellow-green.
 - Filled buttons: `app/Filament/Support/ButtonComponent.php` assigns the colour roles above instead of Filament's automatic choice.
-- Guest pages (household setup, "Who are you?"): semantic colour tokens in `resources/css/app.css` (`bg-primary`, `text-fg-muted`, …) with a dark-mode variant.
+- Guest pages (sign-in, household setup, invitations): semantic colour tokens in `resources/css/app.css` (`bg-primary`, `text-fg-muted`, …) with a dark-mode variant.
 - Avatars are rendered locally as SVG initials; no names are sent to third-party avatar services.

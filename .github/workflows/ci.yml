@@ -11,13 +11,26 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: holdout_test
+          POSTGRES_USER: holdout
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U holdout"
+          --health-interval 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
-          extensions: intl, gd, zip, bcmath, pdo_sqlite
+          extensions: intl, gd, zip, bcmath, pdo_sqlite, pdo_pgsql
           coverage: none
 
       - uses: actions/setup-node@v4
@@ -31,8 +44,19 @@ jobs:
       - name: Pint
         run: vendor/bin/pint --test
 
-      - name: Tests
+      - name: Tests (SQLite)
         run: |
           cp .env.example .env
           php artisan key:generate
           php artisan test
+
+      # Production runs on PostgreSQL: run the suite against it as well.
+      - name: Tests (PostgreSQL)
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: holdout_test
+          DB_USERNAME: holdout
+          DB_PASSWORD: secret
+        run: php artisan test

@@ -1,6 +1,6 @@
 # History
 
-Holdout records every change to the stock: what was added, eaten, thrown away or corrected, how many packages, **who** did it and **when**. The person is the one chosen on this device under ["Who are you?"](Family.md).
+Holdout records every change to the stock: what was added, eaten, thrown away or corrected, how many packages, **who** did it and **when**. The person is whoever is signed in (see [Family](Family.md)).
 
 ## Taking packages out
 

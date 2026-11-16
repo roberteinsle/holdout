@@ -15,7 +15,7 @@ Supported barcodes: EAN-13, EAN-8, UPC-A and UPC-E, the codes on almost all groc
 2. Allow camera access when the browser asks.
 3. Hold the barcode inside the white frame. The phone vibrates briefly when it recognises the code (on devices that support it).
 
-Browsers only allow the camera on pages opened over **HTTPS** (or on the device itself via `localhost`). When Holdout is opened over plain HTTP, for example `http://<server-ip>:8090`, the page says so and offers the input field instead. See [Installation](Installation.md) for setting up HTTPS.
+Browsers only allow the camera on pages opened over **HTTPS** (or on the device itself via `localhost`). When Holdout is opened over plain HTTP, the page says so and offers the input field instead. See [Installation](Installation.md): Holdout should always be served over HTTPS.
 
 If camera access was refused, allow it in the browser's settings for this page. On devices without a camera the page also shows the input field.
 
