@@ -9,11 +9,14 @@ use App\Modules\Inventory\Filament\Resources\Products\Pages\EditProduct;
 use App\Modules\Inventory\Filament\Resources\Products\Pages\ListProducts;
 use App\Modules\Inventory\Filament\Resources\Products\RelationManagers\BatchesRelationManager;
 use App\Modules\Inventory\Models\Product;
+use App\Registries\ProductInfo;
 use App\Registries\ProductLookupRegistry;
 use App\Registries\ProductLookupUnavailable;
 use App\Support\Barcode;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -23,10 +26,13 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Unique;
 
 /**
@@ -92,6 +98,23 @@ class ProductResource extends Resource
                     ignoreRecord: true,
                     modifyRuleUsing: fn (Unique $rule): Unique => $rule->where('household_id', auth()->user()->household_id),
                 ),
+            FileUpload::make('image_path')
+                ->label(__('Photo'))
+                ->image()
+                ->disk(Product::IMAGE_DISK)
+                ->directory(Product::IMAGE_DIRECTORY)
+                ->visibility('private')
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                ->maxSize(5120)
+                // Scaled down on the phone before upload.
+                ->imageResizeMode('contain')
+                ->imageResizeTargetWidth('800')
+                ->imageResizeTargetHeight('800')
+                ->imageResizeUpscale(false)
+                ->helperText(fn (Get $get): ?string => filled($get('image_credit')) ? __('Photo: :credit', ['credit' => $get('image_credit')]) : null)
+                ->live()
+                ->afterStateUpdated(fn (Set $set) => $set('image_credit', null)),
+            Hidden::make('image_credit'),
             TextInput::make('name')
                 ->label(__('Name'))
                 ->required()
@@ -173,6 +196,9 @@ class ProductResource extends Resource
         if ($info->categoryKey !== null) {
             $fill('category_id', Category::query()->where('key', $info->categoryKey)->value('id'));
         }
+        if ($info->imagePath !== null && ($overwrite || blank($get('image_path')))) {
+            static::copyLookupImage($info, $set);
+        }
 
         Notification::make()
             ->title(__('Found: :name', ['name' => $info->name ?? $normalized]))
@@ -181,10 +207,29 @@ class ProductResource extends Resource
             ->send();
     }
 
+    /** Copy the source's photo into the product photos, so the product keeps it on its own. */
+    private static function copyLookupImage(ProductInfo $info, Set $set): void
+    {
+        $disk = Storage::disk(Product::IMAGE_DISK);
+        $target = Product::IMAGE_DIRECTORY.'/'.Str::uuid().'.'.pathinfo((string) $info->imagePath, PATHINFO_EXTENSION);
+
+        if ($disk->exists((string) $info->imagePath) && $disk->copy((string) $info->imagePath, $target)) {
+            $set('image_path', [(string) Str::uuid() => $target]);
+            $set('image_credit', $info->imageCredit);
+        }
+    }
+
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                ImageColumn::make('image_path')
+                    ->label('')
+                    ->disk(Product::IMAGE_DISK)
+                    ->visibility('private')
+                    ->imageSize(44)
+                    ->square()
+                    ->extraImgAttributes(['loading' => 'lazy', 'class' => 'rounded-md object-cover']),
                 // Mobile first: the name column carries brand and package size, so the
                 // list works on a phone without scrolling sideways. Tap a row to edit.
                 TextColumn::make('name')

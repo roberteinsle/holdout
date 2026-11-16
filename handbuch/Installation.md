@@ -51,6 +51,7 @@ docker network create proxy
 | `PUID`, `PGID` | no | Owner of the data, default `1026` / `100` (see step 1) |
 | `APP_TAG` | no | Image tag, default `latest`; set to an older `sha-…` tag to roll back |
 | `OPENFOODFACTS_ENABLED` | no | `false` turns the barcode lookup in Open Food Facts off; default `true` |
+| `OPENFOODFACTS_IMAGE_TIMEOUT` | no | Seconds to wait for a product photo, default `15` (the image server is slower than the API) |
 | `HOLDOUT_SOURCE_URL` | no | Link to your copy of the source code; added to the identification Holdout sends to Open Food Facts |
 
 5. Deploy. Holdout is now reachable at `http://<server-ip>:8090`.
@@ -89,7 +90,7 @@ Holdout is meant to help when things go wrong, so plan for power as well:
 
 ## Backups
 
-All data is in the data folder (`holdout.sqlite` and `app.key`).
+All data is in the data folder: `holdout.sqlite`, `app.key` and the product photos (`product-images/`, `off-images/`).
 
 Before every update that changes the database structure, the container saves a copy of the database to `backups/` in the data folder (`holdout-<date>-<time>.sqlite`) and keeps the newest 10 (change with `HOLDOUT_BACKUP_KEEP`). To go back, stop the stack, replace `holdout.sqlite` with a copy and start an image version from before the update.
 

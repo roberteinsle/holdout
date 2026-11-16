@@ -31,7 +31,9 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   resources and migrations (`loadMigrationsFrom`); factories stay in `database/factories`.
 - Modules: `Supply` (categories), `Inventory` (products; batches = packages + best-before date, status from `eat_soon_days`; locations, movements follow), `OpenFoodFacts`
   (lookup via the registry; local cache 30 days / not found 7 days, stale cache when offline, 30 req/min, generic
-  User-Agent without contact data, `HOLDOUT_SOURCE_URL` optional). Barcodes: 13 digits (`App\Support\Barcode`). Package units
+  User-Agent without contact data, `HOLDOUT_SOURCE_URL` optional; downloads the front photo once, https on
+  openfoodfacts.org only, real images ≤ 2 MB, 15 s timeout). Files: private `data` disk = data folder, signed
+  temporary URLs at `/files`; products keep their own photo copy in `product-images/` (+ `image_credit`). Barcodes: 13 digits (`App\Support\Barcode`). Package units
   g/kg/ml/l, converted to kg or l with 1 l = 1 kg. Lists are mobile first (details in the name column).
 - Categories: the Supply module registers BLE values per person/day (children only differ for drinks), plus
   `other` without a daily need (`CategoryDefinition::hasTarget()` false: no target, never counted in days of supply).

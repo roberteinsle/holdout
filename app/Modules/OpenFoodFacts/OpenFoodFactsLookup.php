@@ -10,6 +10,7 @@ use App\Support\Barcode;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Product data from Open Food Facts (https://world.openfoodfacts.org), with a
@@ -18,7 +19,11 @@ use Illuminate\Support\Facades\RateLimiter;
  */
 class OpenFoodFactsLookup implements ProductLookup
 {
-    private const FIELDS = 'code,product_name,product_name_en,product_name_de,product_name_es,product_name_pt,product_name_fr,generic_name,brands,quantity,product_quantity,product_quantity_unit,categories_tags';
+    private const FIELDS = 'code,product_name,product_name_en,product_name_de,product_name_es,product_name_pt,product_name_fr,generic_name,brands,quantity,product_quantity,product_quantity_unit,categories_tags,image_front_url,image_url';
+
+    private const MAX_IMAGE_BYTES = 2_000_000;
+
+    private const IMAGE_TYPES = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
 
     public function __construct(private ProductMapper $mapper) {}
 
@@ -44,6 +49,7 @@ class OpenFoodFactsLookup implements ProductLookup
             'found' => $product !== null,
             'payload' => $product,
             'fetched_at' => now(),
+            'image_path' => $product !== null ? ($this->downloadImage($barcode, $product) ?? $cached?->image_path) : null,
         ]);
 
         return $this->fromCache($cached, $locale);
@@ -98,6 +104,48 @@ class OpenFoodFactsLookup implements ProductLookup
         return $response->json('product');
     }
 
+    /**
+     * Download the front photo once to the data disk, so it also shows offline.
+     * Only https URLs on openfoodfacts.org, only real JPEG/PNG/WebP images up to
+     * 2 MB. A failed download never fails the lookup.
+     *
+     * @param  array<string, mixed>  $product
+     */
+    private function downloadImage(string $barcode, array $product): ?string
+    {
+        $url = $product['image_front_url'] ?? $product['image_url'] ?? null;
+        $host = is_string($url) ? (string) parse_url($url, PHP_URL_HOST) : '';
+
+        if (! is_string($url) || parse_url($url, PHP_URL_SCHEME) !== 'https'
+            || ($host !== 'openfoodfacts.org' && ! str_ends_with($host, '.openfoodfacts.org'))) {
+            return null;
+        }
+
+        if (! RateLimiter::attempt('openfoodfacts', (int) config('services.openfoodfacts.requests_per_minute'), fn (): bool => true)) {
+            return null;
+        }
+
+        try {
+            $response = Http::withUserAgent((string) config('services.openfoodfacts.user_agent'))
+                ->timeout((int) config('services.openfoodfacts.image_timeout'))
+                ->get($url);
+        } catch (ConnectionException) {
+            return null;
+        }
+
+        $type = strtolower(trim(explode(';', (string) $response->header('Content-Type'))[0]));
+        $body = $response->body();
+
+        if (! $response->successful() || ! isset(self::IMAGE_TYPES[$type])
+            || strlen($body) > self::MAX_IMAGE_BYTES || @getimagesizefromstring($body) === false) {
+            return null;
+        }
+
+        $path = 'off-images/'.$barcode.'.'.self::IMAGE_TYPES[$type];
+
+        return Storage::disk('data')->put($path, $body) ? $path : null;
+    }
+
     private function isFresh(CachedProduct $cached): bool
     {
         $days = $cached->found
@@ -113,6 +161,8 @@ class OpenFoodFactsLookup implements ProductLookup
             return null;
         }
 
-        return $this->mapper->map(Barcode::normalize($cached->barcode) ?? $cached->barcode, $cached->payload, $locale);
+        $imagePath = $cached->image_path !== null && Storage::disk('data')->exists($cached->image_path) ? $cached->image_path : null;
+
+        return $this->mapper->map(Barcode::normalize($cached->barcode) ?? $cached->barcode, $cached->payload, $locale, $imagePath);
     }
 }

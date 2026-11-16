@@ -38,6 +38,18 @@ return [
             'report' => false,
         ],
 
+        // The bind-mounted data folder (database, key, images). Private: files are
+        // served only through signed, temporary URLs at /files.
+        'data' => [
+            'driver' => 'local',
+            'root' => storage_path('app/data'),
+            'url' => '/files',
+            'serve' => true,
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

@@ -11,13 +11,36 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
 
-#[Fillable(['category_id', 'barcode', 'name', 'brand', 'package_value', 'package_unit'])]
+#[Fillable(['category_id', 'barcode', 'name', 'brand', 'package_value', 'package_unit', 'image_path', 'image_credit'])]
 class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
     use HasFactory;
+
+    public const IMAGE_DISK = 'data';
+
+    public const IMAGE_DIRECTORY = 'product-images';
+
+    /** A replaced or deleted product takes its photo file with it. */
+    protected static function booted(): void
+    {
+        static::updated(function (Product $product): void {
+            $old = $product->getOriginal('image_path');
+
+            if ($product->wasChanged('image_path') && $old !== null) {
+                Storage::disk(self::IMAGE_DISK)->delete($old);
+            }
+        });
+
+        static::deleted(function (Product $product): void {
+            if ($product->image_path !== null) {
+                Storage::disk(self::IMAGE_DISK)->delete($product->image_path);
+            }
+        });
+    }
 
     protected static function newFactory(): ProductFactory
     {

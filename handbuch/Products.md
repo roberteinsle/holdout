@@ -9,6 +9,7 @@ Choose **Add product** and fill in:
 | Field | Required | Description |
 |---|---|---|
 | Barcode | no | The number under the barcode, 8 to 14 digits. Stored with 13 digits (UPC and EAN-8 codes get leading zeros). Must be unique within the household. |
+| Photo | no | Take a photo with the phone or choose one (JPEG, PNG or WebP, up to 5 MB; scaled down to 800 px on the device). Found products bring their photo along. |
 | Name | yes | e.g. "Spaghetti" (up to 150 characters) |
 | Brand | no | e.g. the manufacturer or store brand |
 | Category | yes | One of the [categories](Categories.md); decides which target the product counts towards |
@@ -26,6 +27,15 @@ Enter the barcode first. When you leave the field, Holdout looks the product up 
 - Every answer is stored locally: a known product is looked up again only after 30 days, an unknown barcode after 7 days. Without internet, any stored answer is used, however old.
 - Only the barcode is sent to Open Food Facts, with a generic identification of the app and no personal data. At most 30 lookups per minute leave your installation.
 - Product data from Open Food Facts is available under the [Open Database License](https://opendatacommons.org/licenses/odbl/1-0/).
+
+## Photos
+
+A photo makes products easier to recognise at the shelf. The list shows it as a small picture next to the name.
+
+- When a barcode is found in Open Food Facts, Holdout downloads the product's front photo once on the server and gives the product its own copy. Photos from Open Food Facts are licensed CC BY-SA; the product page shows "Photo: Open Food Facts (CC BY-SA)" below them.
+- Your own photo replaces it; removing or replacing a photo deletes the old file, deleting a product deletes its photo.
+- Photos are stored in the data folder (`product-images/`, downloaded originals in `off-images/`), so they work without internet and are part of your backup. They are only shown through signed, temporary links, never publicly.
+- Only photos from `openfoodfacts.org` addresses are downloaded, only real JPEG, PNG or WebP images up to 2 MB. The phones never contact Open Food Facts themselves.
 
 Scanning the barcode with the phone camera follows.
 

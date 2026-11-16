@@ -19,7 +19,7 @@ class CachedProduct extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['barcode', 'found', 'payload', 'fetched_at'];
+    protected $fillable = ['barcode', 'found', 'payload', 'fetched_at', 'image_path'];
 
     protected function casts(): array
     {

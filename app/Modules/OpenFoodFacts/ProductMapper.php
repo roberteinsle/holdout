@@ -30,7 +30,7 @@ class ProductMapper
     public function __construct(private CategoryRegistry $categories) {}
 
     /** @param array<string, mixed> $product */
-    public function map(string $barcode, array $product, string $locale): ProductInfo
+    public function map(string $barcode, array $product, string $locale, ?string $imagePath = null): ProductInfo
     {
         [$value, $unit] = $this->package($product);
 
@@ -42,6 +42,9 @@ class ProductMapper
             packageValue: $value,
             packageUnit: $unit,
             categoryKey: $this->categoryKey($product),
+            imagePath: $imagePath,
+            // Product photos on Open Food Facts are licensed CC BY-SA.
+            imageCredit: $imagePath !== null ? 'Open Food Facts (CC BY-SA)' : null,
         );
     }
 

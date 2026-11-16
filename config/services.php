@@ -42,6 +42,8 @@ return [
         'base_url' => env('OPENFOODFACTS_URL', 'https://world.openfoodfacts.org'),
         'user_agent' => 'Holdout/0.1 (self-hosted family emergency supply app'.(env('HOLDOUT_SOURCE_URL') ? '; '.env('HOLDOUT_SOURCE_URL') : '').')',
         'timeout' => (int) env('OPENFOODFACTS_TIMEOUT', 5),
+        // The image server is noticeably slower than the API.
+        'image_timeout' => (int) env('OPENFOODFACTS_IMAGE_TIMEOUT', 15),
         'requests_per_minute' => (int) env('OPENFOODFACTS_REQUESTS_PER_MINUTE', 30),
         'cache_days' => 30,
         'not_found_cache_days' => 7,
