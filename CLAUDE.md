@@ -27,7 +27,7 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - Modules live in `app/Modules/<Name>/` (service provider in `bootstrap/providers.php`) and register into the
   registries in `app/Registries/` (`CategoryRegistry`, `NavigationRegistry` for Filament resources/pages,
   `ProductLookupRegistry` for barcode data sources, `StockRegistry` for stock per category, `DashboardRegistry` for dashboard widgets: core `SupplyStatusWidget`,
-  Inventory quick actions / eat soon / recently; all full width, order by `$sort`). Core and other modules only read registries;
+  Inventory quick actions / eat soon / recently; all full width, order by `$sort`; `PrintoutRegistry` for printout sections (`PrintSection`): core supply, Inventory eat first / stock by location). Core and other modules only read registries;
   `tests/Unit/ArchitectureTest.php` enforces it. A module owns its models, policies (`Gate::policy`), Filament
   resources and migrations (`loadMigrationsFrom`); factories stay in `database/factories`.
 - Scan page (Inventory, `inventory::scan` view, `resources/js/scanner.js` with zxing; camera needs HTTPS, manual input
@@ -49,6 +49,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   Shown on the Household page. `App\Support\ShoppingList` (core page `/shopping-list`) = what is missing per category
   from `SupplyStatus`, rounded up to 0.1, with a share/copy text. Plurals use `trans_choice` with `|` keys in the JSON files (LocaleTest checks them too).
 - Emergency fallbacks matter more than the live app: printout (#13) and the PWA offline copy (#14).
+  Printout = route `printout` outside the panel (`auth` + `SetLocale`), inline styles only, A4 black and white, status
+  written out; the menu page is `App\Filament\Pages\Printout` (`/print`).
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).
 - Languages: English (main, fallback), German, Spanish, Portuguese, French (`App\Support\Locales`). Every

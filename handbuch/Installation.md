@@ -86,7 +86,7 @@ Holdout is meant to help when things go wrong, so plan for power as well:
 - **Network:** put the **router and the Wi-Fi access point** on the UPS too. Otherwise the server keeps running but no phone can reach it.
 - **Backup power:** with a PV system in island mode or a power station, the server and network can run for days (together they typically draw 50–60 W). The UPS then bridges the switchover. Test it by switching off the grid supply.
 - **Phones:** keep power banks in your supply.
-- **Paper:** keep a current printout in your emergency folder. When the server is down, paper still works.
+- **Paper:** keep a current [printout](Printout.md) in your emergency folder. When the server is down, paper still works.
 
 ## Backups
 

@@ -18,9 +18,12 @@ use App\Modules\Inventory\Policies\BatchPolicy;
 use App\Modules\Inventory\Policies\LocationPolicy;
 use App\Modules\Inventory\Policies\MovementPolicy;
 use App\Modules\Inventory\Policies\ProductPolicy;
+use App\Modules\Inventory\Printout\EatFirstSection;
+use App\Modules\Inventory\Printout\StockSection;
 use App\Modules\Inventory\Support\InventoryStock;
 use App\Registries\DashboardRegistry;
 use App\Registries\NavigationRegistry;
+use App\Registries\PrintoutRegistry;
 use App\Registries\StockRegistry;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -53,6 +56,12 @@ class InventoryServiceProvider extends ServiceProvider
         // The stock per category, for the supply status (stock against target).
         $this->app->afterResolving(StockRegistry::class, function (StockRegistry $stock): void {
             $stock->register(self::MODULE, $this->app->make(InventoryStock::class));
+        });
+
+        // The printout (paper emergency copy): what to eat first, and everything by location.
+        $this->app->afterResolving(PrintoutRegistry::class, function (PrintoutRegistry $printout): void {
+            $printout->section(self::MODULE, new EatFirstSection);
+            $printout->section(self::MODULE, new StockSection);
         });
     }
 
