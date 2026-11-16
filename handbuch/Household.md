@@ -39,7 +39,7 @@ For each category you see:
 
 Only batches that have not expired count; a batch is expired from the day after its best-before date. Expired stock is shown below the category as "Plus … expired, not counted", so you know it is still on the shelf. Batches without a date always count.
 
-The numbers change as soon as batches are added or [taken out](History.md); reload the page to see them.
+The numbers change as soon as batches are added or [taken out](History.md); reload the page to see them. What is missing, ready to share, is on the [shopping list](Shopping-list.md).
 
 ## During setup
 

@@ -11,7 +11,7 @@ Two big buttons at the top:
 
 ## Supply
 
-How many days the whole supply lasts for your household, e.g. **Your supply lasts 4 of 10 days**, and which category **runs out first**. Below, one line per category with its status icon (enough, too little, missing), the share of the target covered and the days it lasts. **Details** opens the [Household](Household.md#stock-against-target) page with the amounts. Expired batches are not counted.
+How many days the whole supply lasts for your household, e.g. **Your supply lasts 4 of 10 days**, and which category **runs out first**. Below, one line per category with its status icon (enough, too little, missing), the share of the target covered and the days it lasts. **Details** opens the [Household](Household.md#stock-against-target) page with the amounts; while anything is missing, **Shopping list** opens the [shopping list](Shopping-list.md). Expired batches are not counted.
 
 ## Eat soon
 

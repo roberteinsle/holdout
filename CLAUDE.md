@@ -46,7 +46,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - Targets: `App\Support\SupplyTargets` = (adults × per adult + children × per child) × target days, from the
   `CategoryRegistry` only. `App\Support\SupplyStatus` compares them with the `StockRegistry` (Inventory's
   `InventoryStock`: non-expired batches in kg/l; expired shown, not counted); days of supply = smallest category.
-  Shown on the Household page. Plurals use `trans_choice` with `|` keys in the JSON files (LocaleTest checks them too).
+  Shown on the Household page. `App\Support\ShoppingList` (core page `/shopping-list`) = what is missing per category
+  from `SupplyStatus`, rounded up to 0.1, with a share/copy text. Plurals use `trans_choice` with `|` keys in the JSON files (LocaleTest checks them too).
 - Emergency fallbacks matter more than the live app: printout (#13) and the PWA offline copy (#14).
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).

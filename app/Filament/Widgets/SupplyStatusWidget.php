@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Filament\Pages\HouseholdSettings;
+use App\Filament\Pages\ShoppingListPage;
 use App\Support\StockLevel;
 use App\Support\SupplyStatus;
 use Filament\Widgets\Widget;
@@ -33,6 +34,7 @@ class SupplyStatusWidget extends Widget
             'limitedBy' => SupplyStatus::limitedBy($status),
             'people' => $household->memberTotal(),
             'detailsUrl' => HouseholdSettings::getUrl(),
+            'shoppingUrl' => ShoppingListPage::getUrl(),
         ];
     }
 }

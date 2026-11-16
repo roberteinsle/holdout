@@ -1,7 +1,12 @@
 <x-filament-widgets::widget>
     <x-filament::section :heading="__('Supply')">
         <x-slot name="afterHeader">
-            <x-filament::link :href="$detailsUrl" size="sm">{{ __('Details') }}</x-filament::link>
+            <div class="flex items-center gap-4">
+                @if ($people > 0 && $status->contains(fn ($item) => $item->missing() > 0))
+                    <x-filament::link :href="$shoppingUrl" size="sm" icon="heroicon-m-shopping-cart">{{ __('Shopping list') }}</x-filament::link>
+                @endif
+                <x-filament::link :href="$detailsUrl" size="sm">{{ __('Details') }}</x-filament::link>
+            </div>
         </x-slot>
 
         @if ($people === 0)
