@@ -29,7 +29,7 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   `ProductLookupRegistry` for barcode data sources; a dashboard registry comes with its first use). Core and other modules only read registries;
   `tests/Unit/ArchitectureTest.php` enforces it. A module owns its models, policies (`Gate::policy`), Filament
   resources and migrations (`loadMigrationsFrom`); factories stay in `database/factories`.
-- Modules: `Supply` (categories), `Inventory` (products; batches, locations, movements follow), `OpenFoodFacts`
+- Modules: `Supply` (categories), `Inventory` (products; batches = packages + best-before date, status from `eat_soon_days`; locations, movements follow), `OpenFoodFacts`
   (lookup via the registry; local cache 30 days / not found 7 days, stale cache when offline, 30 req/min, generic
   User-Agent without contact data, `HOLDOUT_SOURCE_URL` optional). Barcodes: 13 digits (`App\Support\Barcode`). Package units
   g/kg/ml/l, converted to kg or l with 1 l = 1 kg. Lists are mobile first (details in the name column).

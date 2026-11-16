@@ -16,8 +16,9 @@ class CreateProduct extends CreateRecord
         return auth()->user()->household->hasMany(static::getModel())->create($data);
     }
 
+    /** On to the product page, where its batches are added. */
     protected function getRedirectUrl(): string
     {
-        return static::getResource()::getUrl('index');
+        return static::getResource()::getUrl('edit', ['record' => $this->getRecord()]);
     }
 }

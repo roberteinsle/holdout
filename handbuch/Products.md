@@ -1,6 +1,6 @@
 # Products
 
-The **Products** page lists the products your household keeps in its supply. A product describes *what* it is (for example "Spaghetti, 500 g"); how much of it you have and when it expires is recorded later as batches.
+The **Products** page lists the products your household keeps in its supply. A product describes *what* it is (for example "Spaghetti, 500 g"); how much of it you have and when it expires is recorded as [batches](Batches.md).
 
 ## Adding a product
 
@@ -15,7 +15,7 @@ Choose **Add product** and fill in:
 | Package size | yes | Amount in one package, e.g. `500` |
 | Unit | yes | `g`, `kg`, `ml` or `l` |
 
-**Create & create another** keeps the form open for the next product.
+After **Create**, the product's page opens so you can add its first batch. **Create & create another** keeps the form open for the next product instead.
 
 ## Looking up a barcode
 
@@ -36,6 +36,7 @@ The targets are in kg (food) or l (drinks). To count a product towards its categ
 ## The list
 
 - On a phone, each row shows the name with brand and package size underneath. Tap a row to edit the product.
+- **In stock** shows the number of packages over all of the product's batches.
 - On wider screens, the category and package size also have their own columns.
 - Search finds name, brand and barcode; the filter narrows the list to one category.
-- To delete a product, open it and choose **Delete**.
+- To delete a product, open it and choose **Delete**. Its batches are deleted too.

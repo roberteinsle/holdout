@@ -7,6 +7,7 @@ use App\Modules\Inventory\Enums\PackageUnit;
 use App\Modules\Inventory\Filament\Resources\Products\Pages\CreateProduct;
 use App\Modules\Inventory\Filament\Resources\Products\Pages\EditProduct;
 use App\Modules\Inventory\Filament\Resources\Products\Pages\ListProducts;
+use App\Modules\Inventory\Filament\Resources\Products\RelationManagers\BatchesRelationManager;
 use App\Modules\Inventory\Models\Product;
 use App\Registries\ProductLookupRegistry;
 use App\Registries\ProductLookupUnavailable;
@@ -55,7 +56,8 @@ class ProductResource extends Resource
     {
         return parent::getEloquentQuery()
             ->where('household_id', auth()->user()->household_id)
-            ->with('category');
+            ->with('category')
+            ->withSum('batches', 'quantity');
     }
 
     /** @return array<int, string> category id => translated name, in display order */
@@ -201,6 +203,14 @@ class ProductResource extends Resource
                     ->formatStateUsing(fn (Product $record): string => $record->packageLabel())
                     ->alignEnd()
                     ->visibleFrom('md'),
+                // Packages in stock over all batches; stays visible on a phone.
+                TextColumn::make('batches_sum_quantity')
+                    ->label(__('In stock'))
+                    ->formatStateUsing(fn (Product $record): string => (int) $record->batches_sum_quantity.' ×')
+                    ->default(0)
+                    ->color(fn (Product $record): ?string => (int) $record->batches_sum_quantity === 0 ? 'gray' : null)
+                    ->sortable()
+                    ->alignEnd(),
             ])
             ->defaultSort('name')
             ->filters([
@@ -212,6 +222,13 @@ class ProductResource extends Resource
             ->recordActions([])
             ->emptyStateHeading(__('No products yet'))
             ->emptyStateDescription(__('Add the products you keep in your supply.'));
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            BatchesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
