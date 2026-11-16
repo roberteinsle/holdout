@@ -51,6 +51,8 @@ class SupplyServiceProvider extends ServiceProvider
             new CategoryDefinition('protein', 'Eggs, meat, fish', 'kg', perAdultDay: 0.12, sort: 60, source: self::SOURCE),
             // Fats, oil: 33 g
             new CategoryDefinition('fats', 'Fats, oil', 'kg', perAdultDay: 0.033, sort: 70, source: self::SOURCE),
+            // Everything else in the supply (e.g. spices, sweets, baby food): no daily need, no target.
+            new CategoryDefinition('other', 'Other', 'kg', perAdultDay: 0.0, sort: 900),
         ];
     }
 }

@@ -33,7 +33,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   (lookup via the registry; local cache 30 days / not found 7 days, stale cache when offline, 30 req/min, generic
   User-Agent without contact data, `HOLDOUT_SOURCE_URL` optional). Barcodes: 13 digits (`App\Support\Barcode`). Package units
   g/kg/ml/l, converted to kg or l with 1 l = 1 kg. Lists are mobile first (details in the name column).
-- Categories: the Supply module registers BLE values per person/day (children only differ for drinks).
+- Categories: the Supply module registers BLE values per person/day (children only differ for drinks), plus
+  `other` without a daily need (`CategoryDefinition::hasTarget()` false: no target, never counted in days of supply).
   `CategorySeeder` syncs them on every start (`migrate --seed`); `DatabaseSeeder` must stay idempotent, demo
   data is `DemoSeeder`. Category names are English source strings; keep them in `lang/de.json`.
 - Targets: `App\Support\SupplyTargets` = (adults × per adult + children × per child) × target days, from the

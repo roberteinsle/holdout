@@ -17,7 +17,9 @@ class CategoryRegistryTest extends TestCase
     {
         $categories = app(CategoryRegistry::class)->all();
 
-        $this->assertSame(['water', 'grains', 'vegetables', 'fruit', 'dairy', 'protein', 'fats'], $categories->keys()->all());
+        $this->assertSame(['water', 'grains', 'vegetables', 'fruit', 'dairy', 'protein', 'fats', 'other'], $categories->keys()->all());
+        $this->assertFalse($categories['other']->hasTarget());
+        $this->assertTrue($categories['fats']->hasTarget());
 
         // Per person and day, BLE stock calculator (2,200 kcal).
         $expected = ['water' => 2.0, 'grains' => 0.33, 'vegetables' => 0.40, 'fruit' => 0.25, 'dairy' => 0.25, 'protein' => 0.12, 'fats' => 0.033];
@@ -53,7 +55,7 @@ class CategoryRegistryTest extends TestCase
         $this->seed(CategorySeeder::class);
         $this->seed(CategorySeeder::class);
 
-        $this->assertSame(7, Category::query()->count());
+        $this->assertSame(8, Category::query()->count());
 
         $water = Category::query()->where('key', 'water')->sole();
         $this->assertSame('supply', $water->module);

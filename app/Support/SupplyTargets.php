@@ -10,7 +10,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Target amount per category: (adults × need per adult + children × need per
- * child) × target days. Reads the categories from the CategoryRegistry only.
+ * child) × target days. Reads the categories from the CategoryRegistry only;
+ * categories without a daily need (e.g. "Other") have no target and are left out.
  */
 class SupplyTargets
 {
@@ -23,7 +24,7 @@ class SupplyTargets
         $children = $household->memberCount(MemberType::Child);
         $days ??= $household->target_days;
 
-        return $this->categories->all()->map(function (CategoryDefinition $category) use ($adults, $children, $days): SupplyTarget {
+        return $this->categories->all()->filter(fn (CategoryDefinition $category): bool => $category->hasTarget())->map(function (CategoryDefinition $category) use ($adults, $children, $days): SupplyTarget {
             $perDay = $adults * $category->perAdultDay + $children * $category->perChild();
 
             return new SupplyTarget($category, $perDay, $perDay * $days);

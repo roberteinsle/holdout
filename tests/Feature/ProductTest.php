@@ -84,6 +84,18 @@ class ProductTest extends TestCase
         $this->assertDatabaseCount('products', 0);
     }
 
+    public function test_products_can_be_filed_under_other(): void
+    {
+        $this->get(ProductResource::getUrl('create'))->assertSee('Other');
+
+        Livewire::test(CreateProduct::class)
+            ->fillForm(['name' => 'Salt', 'category_id' => $this->category('other')->id, 'package_value' => 500, 'package_unit' => 'g'])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame('other', Product::query()->sole()->category->key);
+    }
+
     public function test_a_barcode_is_unique_within_the_household_only(): void
     {
         Product::factory()->for($this->user->household)->create(['barcode' => '4001234567890']);

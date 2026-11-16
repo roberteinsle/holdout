@@ -37,6 +37,7 @@ class SupplyTargetsTest extends TestCase
         // Fats: 3 × 0.033 kg × 14 days
         $this->assertEqualsWithDelta(1.386, $targets['fats']->total, 0.0001);
 
+        // "Other" has no daily need and therefore no target.
         $this->assertSame(['water', 'grains', 'vegetables', 'fruit', 'dairy', 'protein', 'fats'], $targets->keys()->all());
     }
 

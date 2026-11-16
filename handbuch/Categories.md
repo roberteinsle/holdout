@@ -15,6 +15,11 @@ The values come from the stock calculator of the German Federal Office for Agric
 | Milk, dairy products | 0.25 kg | 0.25 kg |
 | Eggs, meat, fish | 0.12 kg | 0.12 kg |
 | Fats, oil | 0.033 kg (33 g) | 0.033 kg |
+| Other | – | – |
+
+### Other
+
+**Other** is for products that belong in the supply but fit none of the food groups, for example spices, sweets or baby food. It has no daily need, so it has no target and does not appear in "What you need"; its products never make the supply look longer or shorter.
 
 ### Children
 
