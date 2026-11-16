@@ -2,6 +2,7 @@
 
 namespace App\Modules\Inventory;
 
+use App\Modules\Inventory\Filament\Pages\Scan;
 use App\Modules\Inventory\Filament\Resources\Batches\BatchResource;
 use App\Modules\Inventory\Filament\Resources\Products\ProductResource;
 use App\Modules\Inventory\Models\Batch;
@@ -25,6 +26,7 @@ class InventoryServiceProvider extends ServiceProvider
     {
         $this->app->afterResolving(NavigationRegistry::class, function (NavigationRegistry $navigation): void {
             $navigation->resource(self::MODULE, ProductResource::class);
+            $navigation->page(self::MODULE, Scan::class);
             $navigation->resource(self::MODULE, BatchResource::class);
         });
     }
@@ -32,6 +34,7 @@ class InventoryServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+        $this->loadViewsFrom(__DIR__.'/resources/views', 'inventory');
 
         Gate::policy(Product::class, ProductPolicy::class);
         Gate::policy(Batch::class, BatchPolicy::class);

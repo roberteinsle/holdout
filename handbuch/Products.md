@@ -37,7 +37,7 @@ A photo makes products easier to recognise at the shelf. The list shows it as a 
 - Photos are stored in the data folder (`product-images/`, downloaded originals in `off-images/`), so they work without internet and are part of your backup. They are only shown through signed, temporary links, never publicly.
 - Only photos from `openfoodfacts.org` addresses are downloaded, only real JPEG, PNG or WebP images up to 2 MB. The phones never contact Open Food Facts themselves.
 
-Scanning the barcode with the phone camera follows.
+To scan a barcode with the phone camera instead of typing it, use the [Scan](Scanning.md) page.
 
 ## Litres and kilograms
 

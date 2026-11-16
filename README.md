@@ -2,7 +2,7 @@
 
 Mobile-first web app to build and maintain a family emergency food & water supply. Scan barcodes, track best-before dates, see how many days you'd last. Self-hosted on your home network, Laravel + Filament.
 
-**Status:** v0.1 in progress. Household setup, target amounts per category (BLE values) and products with barcode lookup in Open Food Facts work; batches with best-before dates, camera scanning and the dashboard follow.
+**Status:** v0.1 in progress. Household setup, target amounts per category (BLE values) and products with photos and barcode lookup in Open Food Facts, batches with best-before dates and camera scanning work; the dashboard follows.
 
 ## Quick start
 

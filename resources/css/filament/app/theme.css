@@ -2,6 +2,7 @@
 
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
+@source '../../../../app/Modules/**/*';
 
 /* Holdout design: white page with sand-bordered cards in light mode;
    dark mode keeps Filament's gray-950 / gray-900 (= #151619 / #242529). */
