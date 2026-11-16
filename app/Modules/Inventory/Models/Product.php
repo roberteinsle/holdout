@@ -74,6 +74,12 @@ class Product extends Model
         return $this->hasMany(Batch::class);
     }
 
+    /** @return HasMany<Movement, $this> */
+    public function movements(): HasMany
+    {
+        return $this->hasMany(Movement::class);
+    }
+
     /** One package in the category unit (kg or l). */
     public function packageInBaseUnit(): float
     {

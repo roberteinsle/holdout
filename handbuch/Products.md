@@ -49,4 +49,4 @@ The targets are in kg (food) or l (drinks). To count a product towards its categ
 - **In stock** shows the number of packages over all of the product's batches.
 - On wider screens, the category and package size also have their own columns.
 - Search finds name, brand and barcode; the filter narrows the list to one category.
-- To delete a product, open it and choose **Delete**. Its batches are deleted too.
+- To delete a product, open it and choose **Delete**. Its batches and its [history](History.md) are deleted too.

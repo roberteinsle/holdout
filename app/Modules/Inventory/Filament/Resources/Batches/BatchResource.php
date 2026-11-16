@@ -3,6 +3,7 @@
 namespace App\Modules\Inventory\Filament\Resources\Batches;
 
 use App\Modules\Inventory\Enums\ExpiryStatus;
+use App\Modules\Inventory\Filament\Actions\TakeOutAction;
 use App\Modules\Inventory\Filament\Resources\Batches\Pages\CreateBatch;
 use App\Modules\Inventory\Filament\Resources\Batches\Pages\EditBatch;
 use App\Modules\Inventory\Filament\Resources\Batches\Pages\ListBatches;
@@ -142,7 +143,10 @@ class BatchResource extends Resource
                     ->label(__('Product'))
                     ->options(fn (): array => static::productOptions()),
             ])
-            ->recordActions([])
+            // Tap a row to edit; the minus takes packages out.
+            ->recordActions([
+                TakeOutAction::make()->iconButton(),
+            ])
             ->emptyStateHeading(__('No batches yet'))
             ->emptyStateDescription(__('Record what you have in stock: how many packages of a product and their best-before date.'));
     }

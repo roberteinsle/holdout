@@ -13,10 +13,11 @@ Holdout is a mobile-first web app that helps families build and keep an emergenc
 - [Products](Products.md): the products in your supply, with category and package size
 - [Batches](Batches.md): how many packages you have and when they expire
 - [Locations](Locations.md): where the supply is kept
+- [History](History.md): taking packages out, and who changed what
 - [Family](Family.md): household setup, "Who are you?", managing people
 - [Design](Design.md): colours and contrast rules
 - [Development](Development.md): local setup, tests, conventions, documentation workflow
 
 ## Status
 
-Version 0.1 is in progress. Available so far: household setup, household size and target days with the resulting target amounts per category, products with barcode lookup and camera scanning, batches with best-before dates, storage locations, and the family list. Movements, the stock compared with the targets, the dashboard, the shopping list, the printout and offline use on phones follow.
+Version 0.1 is in progress. Available so far: household setup, household size and target days with the resulting target amounts per category, products with barcode lookup and camera scanning, batches with best-before dates, storage locations, taking packages out with a history of who did what, and the family list. The stock compared with the targets, the dashboard, the shopping list, the printout and offline use on phones follow.

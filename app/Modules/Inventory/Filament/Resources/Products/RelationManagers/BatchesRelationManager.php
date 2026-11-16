@@ -2,6 +2,7 @@
 
 namespace App\Modules\Inventory\Filament\Resources\Products\RelationManagers;
 
+use App\Modules\Inventory\Filament\Actions\TakeOutAction;
 use App\Modules\Inventory\Filament\Resources\Batches\BatchResource;
 use App\Modules\Inventory\Models\Batch;
 use Filament\Actions\CreateAction;
@@ -54,9 +55,10 @@ class BatchesRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make()->label(__('Add batch')),
             ])
-            // Tap a row to edit; the icons edit or delete.
+            // Tap a row to edit; the icons take out, edit or delete.
             ->recordAction('edit')
             ->recordActions([
+                TakeOutAction::make()->iconButton(),
                 EditAction::make()->iconButton(),
                 DeleteAction::make()->iconButton(),
             ])

@@ -8,6 +8,7 @@ use App\Modules\Inventory\Filament\Resources\Products\Pages\CreateProduct;
 use App\Modules\Inventory\Filament\Resources\Products\Pages\EditProduct;
 use App\Modules\Inventory\Filament\Resources\Products\Pages\ListProducts;
 use App\Modules\Inventory\Filament\Resources\Products\RelationManagers\BatchesRelationManager;
+use App\Modules\Inventory\Filament\Resources\Products\RelationManagers\MovementsRelationManager;
 use App\Modules\Inventory\Models\Product;
 use App\Registries\ProductInfo;
 use App\Registries\ProductLookupRegistry;
@@ -273,6 +274,7 @@ class ProductResource extends Resource
     {
         return [
             BatchesRelationManager::class,
+            MovementsRelationManager::class,
         ];
     }
 

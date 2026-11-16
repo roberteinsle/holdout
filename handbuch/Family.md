@@ -28,4 +28,4 @@ Under **Family**, everyone can:
 
 - **Add person:** enter a name.
 - **Edit:** change a name.
-- **Remove:** delete a person. The person currently using this device cannot remove themselves; switch person first.
+- **Remove:** delete a person. The person currently using this device cannot remove themselves; switch person first. Their entries in the [history](History.md) stay and show **Unknown**.

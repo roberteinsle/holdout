@@ -3,8 +3,10 @@
 namespace App\Modules\Inventory\Models;
 
 use App\Modules\Inventory\Enums\ExpiryStatus;
+use App\Modules\Inventory\Observers\BatchObserver;
 use Database\Factories\BatchFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * against the household).
  */
 #[Fillable(['product_id', 'location_id', 'quantity', 'best_before', 'note'])]
+#[ObservedBy(BatchObserver::class)]
 class Batch extends Model
 {
     /** @use HasFactory<BatchFactory> */
