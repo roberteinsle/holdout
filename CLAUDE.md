@@ -26,7 +26,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   who use the app; target days and the "eat soon" window are on `households` (no language there).
 - Modules live in `app/Modules/<Name>/` (service provider in `bootstrap/providers.php`) and register into the
   registries in `app/Registries/` (`CategoryRegistry`, `NavigationRegistry` for Filament resources/pages,
-  `ProductLookupRegistry` for barcode data sources, `StockRegistry` for stock per category; a dashboard registry comes with its first use). Core and other modules only read registries;
+  `ProductLookupRegistry` for barcode data sources, `StockRegistry` for stock per category, `DashboardRegistry` for dashboard widgets: core `SupplyStatusWidget`,
+  Inventory quick actions / eat soon / recently; all full width, order by `$sort`). Core and other modules only read registries;
   `tests/Unit/ArchitectureTest.php` enforces it. A module owns its models, policies (`Gate::policy`), Filament
   resources and migrations (`loadMigrationsFrom`); factories stay in `database/factories`.
 - Scan page (Inventory, `inventory::scan` view, `resources/js/scanner.js` with zxing; camera needs HTTPS, manual input

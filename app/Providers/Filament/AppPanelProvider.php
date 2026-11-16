@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Profile;
 use App\Filament\Support\InitialsAvatarProvider;
 use App\Http\Middleware\SetLocale;
+use App\Registries\DashboardRegistry;
 use App\Registries\NavigationRegistry;
 use App\Support\Palette;
 use Filament\Actions\Action;
@@ -48,8 +49,8 @@ class AppPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
-            ->widgets([])
+            // Dashboard widgets come from the DashboardRegistry (core and modules).
+            ->widgets(app(DashboardRegistry::class)->widgets())
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

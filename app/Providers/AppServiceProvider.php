@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Filament\Support\ButtonComponent;
+use App\Filament\Widgets\SupplyStatusWidget;
 use App\Registries\CategoryRegistry;
+use App\Registries\DashboardRegistry;
 use App\Registries\NavigationRegistry;
 use App\Registries\ProductLookupRegistry;
 use App\Registries\StockRegistry;
@@ -25,6 +27,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(NavigationRegistry::class);
         $this->app->singleton(ProductLookupRegistry::class);
         $this->app->singleton(StockRegistry::class);
+        $this->app->singleton(DashboardRegistry::class);
+
+        // Core's own dashboard widget: days of supply and stock against target.
+        $this->app->afterResolving(DashboardRegistry::class, function (DashboardRegistry $dashboard): void {
+            $dashboard->widget('core', SupplyStatusWidget::class);
+        });
     }
 
     /**

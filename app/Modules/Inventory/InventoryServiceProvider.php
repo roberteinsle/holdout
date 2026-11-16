@@ -7,6 +7,9 @@ use App\Modules\Inventory\Filament\Resources\Batches\BatchResource;
 use App\Modules\Inventory\Filament\Resources\Locations\LocationResource;
 use App\Modules\Inventory\Filament\Resources\Movements\MovementResource;
 use App\Modules\Inventory\Filament\Resources\Products\ProductResource;
+use App\Modules\Inventory\Filament\Widgets\EatSoonWidget;
+use App\Modules\Inventory\Filament\Widgets\QuickActionsWidget;
+use App\Modules\Inventory\Filament\Widgets\RecentActivityWidget;
 use App\Modules\Inventory\Models\Batch;
 use App\Modules\Inventory\Models\Location;
 use App\Modules\Inventory\Models\Movement;
@@ -16,6 +19,7 @@ use App\Modules\Inventory\Policies\LocationPolicy;
 use App\Modules\Inventory\Policies\MovementPolicy;
 use App\Modules\Inventory\Policies\ProductPolicy;
 use App\Modules\Inventory\Support\InventoryStock;
+use App\Registries\DashboardRegistry;
 use App\Registries\NavigationRegistry;
 use App\Registries\StockRegistry;
 use Illuminate\Support\Facades\Gate;
@@ -38,6 +42,12 @@ class InventoryServiceProvider extends ServiceProvider
             $navigation->resource(self::MODULE, BatchResource::class);
             $navigation->resource(self::MODULE, LocationResource::class);
             $navigation->resource(self::MODULE, MovementResource::class);
+        });
+
+        $this->app->afterResolving(DashboardRegistry::class, function (DashboardRegistry $dashboard): void {
+            $dashboard->widget(self::MODULE, QuickActionsWidget::class);
+            $dashboard->widget(self::MODULE, EatSoonWidget::class);
+            $dashboard->widget(self::MODULE, RecentActivityWidget::class);
         });
 
         // The stock per category, for the supply status (stock against target).
