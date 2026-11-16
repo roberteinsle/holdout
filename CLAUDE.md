@@ -26,7 +26,7 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   who use the app; target days and the "eat soon" window are on `households` (no language there).
 - Modules live in `app/Modules/<Name>/` (service provider in `bootstrap/providers.php`) and register into the
   registries in `app/Registries/` (`CategoryRegistry`, `NavigationRegistry` for Filament resources/pages,
-  `ProductLookupRegistry` for barcode data sources; a dashboard registry comes with its first use). Core and other modules only read registries;
+  `ProductLookupRegistry` for barcode data sources, `StockRegistry` for stock per category; a dashboard registry comes with its first use). Core and other modules only read registries;
   `tests/Unit/ArchitectureTest.php` enforces it. A module owns its models, policies (`Gate::policy`), Filament
   resources and migrations (`loadMigrationsFrom`); factories stay in `database/factories`.
 - Scan page (Inventory, `inventory::scan` view, `resources/js/scanner.js` with zxing; camera needs HTTPS, manual input
@@ -43,7 +43,9 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   `CategorySeeder` syncs them on every start (`migrate --seed`); `DatabaseSeeder` must stay idempotent, demo
   data is `DemoSeeder`. Category names are English source strings; keep them in `lang/de.json`.
 - Targets: `App\Support\SupplyTargets` = (adults × per adult + children × per child) × target days, from the
-  `CategoryRegistry` only; shown on the Household page.
+  `CategoryRegistry` only. `App\Support\SupplyStatus` compares them with the `StockRegistry` (Inventory's
+  `InventoryStock`: non-expired batches in kg/l; expired shown, not counted); days of supply = smallest category.
+  Shown on the Household page. Plurals use `trans_choice` with `|` keys in the JSON files (LocaleTest checks them too).
 - Emergency fallbacks matter more than the live app: printout (#13) and the PWA offline copy (#14).
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).

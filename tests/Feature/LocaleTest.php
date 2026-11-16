@@ -123,7 +123,7 @@ class LocaleTest extends TestCase
         $this->assertNotEmpty($german);
     }
 
-    /** @return list<string> All __('...') strings in app/ and resources/views plus the category names. */
+    /** @return list<string> All __('...') and trans_choice('...') strings in app/ and resources/views plus the category names. */
     private function appStrings(): array
     {
         $keys = [];
@@ -136,7 +136,7 @@ class LocaleTest extends TestCase
                     continue;
                 }
 
-                preg_match_all("/__\\(\\s*'((?:[^'\\\\]|\\\\.)*)'/", file_get_contents($file->getPathname()), $matches);
+                preg_match_all("/(?:__|trans_choice)\\(\\s*'((?:[^'\\\\]|\\\\.)*)'/", file_get_contents($file->getPathname()), $matches);
                 foreach ($matches[1] as $key) {
                     $keys[] = stripslashes($key);
                 }

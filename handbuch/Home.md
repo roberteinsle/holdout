@@ -7,7 +7,7 @@ Holdout is a mobile-first web app that helps families build and keep an emergenc
 ## Pages
 
 - [Installation](Installation.md): run Holdout at home with Docker and Portainer, HTTPS, emergency power, backups
-- [Household](Household.md): household size, target days, "eat soon" window, language
+- [Household](Household.md): household size, target days, "eat soon" window, stock against target
 - [Categories](Categories.md): food and water categories and the daily need per person (BLE values)
 - [Scanning](Scanning.md): scan a barcode with the phone camera to add a batch or a new product
 - [Products](Products.md): the products in your supply, with category and package size
@@ -20,4 +20,4 @@ Holdout is a mobile-first web app that helps families build and keep an emergenc
 
 ## Status
 
-Version 0.1 is in progress. Available so far: household setup, household size and target days with the resulting target amounts per category, products with barcode lookup and camera scanning, batches with best-before dates, storage locations, taking packages out with a history of who did what, and the family list. The stock compared with the targets, the dashboard, the shopping list, the printout and offline use on phones follow.
+Version 0.1 is in progress. Available so far: household setup, household size and target days with the resulting target amounts per category, products with barcode lookup and camera scanning, batches with best-before dates, storage locations, taking packages out with a history of who did what, the stock compared with the targets, and the family list. The dashboard, the shopping list, the printout and offline use on phones follow.

@@ -14,3 +14,14 @@ html:not(.dark) .fi-section:not(.fi-section-not-contained),
 html:not(.dark) .fi-ta-ctn {
     --tw-ring-color: #bcae8b;
 }
+
+/* Stock level (Household page): text and bar colours per level, readable in
+   both modes; never white text on signal orange (see handbuch/Design.md). */
+.hd-level-enough { --hd-text: var(--success-700); --hd-bar: var(--success-600); }
+.hd-level-low { --hd-text: var(--warning-700); --hd-bar: var(--warning-500); }
+.hd-level-missing { --hd-text: var(--danger-600); --hd-bar: var(--danger-600); }
+.dark .hd-level-enough { --hd-text: var(--success-400); --hd-bar: var(--success-400); }
+.dark .hd-level-low { --hd-text: var(--warning-400); --hd-bar: var(--warning-500); }
+.dark .hd-level-missing { --hd-text: var(--danger-400); --hd-bar: var(--danger-500); }
+.hd-level-text { color: var(--hd-text); }
+.hd-level-bar { background-color: var(--hd-bar); }

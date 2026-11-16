@@ -4,7 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Enums\MemberType;
 use App\Models\Household;
-use App\Support\SupplyTargets;
+use App\Support\SupplyStatus;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Household settings: name, size (adults/children), target days and the
- * "eat soon" window, plus the resulting target amount per
- * category (SupplyTargets, from the CategoryRegistry).
+ * "eat soon" window, plus the target amount per category against the stock
+ * (SupplyStatus: targets from the CategoryRegistry, stock from the StockRegistry).
  */
 class HouseholdSettings extends Page
 {
@@ -126,7 +126,7 @@ class HouseholdSettings extends Page
                     ]),
                 ]),
             Section::make(fn (): string => __('What you need for :days days', ['days' => $this->household()->target_days]))
-                ->description(__('Calculated from the household size and the target days. Updated when you save.'))
+                ->description(__('Calculated from the household size and the target days, against what you have in stock. Updated when you save.'))
                 ->schema([
                     View::make('filament.pages.household-targets')
                         ->viewData(fn (): array => $this->targetsViewData()),
@@ -139,8 +139,12 @@ class HouseholdSettings extends Page
     {
         $household = $this->household()->fresh('members');
 
+        $status = app(SupplyStatus::class)->for($household);
+
         return [
-            'targets' => app(SupplyTargets::class)->for($household),
+            'status' => $status,
+            'daysOfSupply' => SupplyStatus::daysOfSupply($status),
+            'limitedBy' => SupplyStatus::limitedBy($status),
             'days' => $household->target_days,
             'people' => $household->memberTotal(),
         ];

@@ -42,4 +42,4 @@ The **Batches** section below the product form lists the product's batches, with
 
 The product list shows **In stock**: the number of packages over all batches of each product.
 
-Every change to a batch's packages is recorded in the [history](History.md), with who made it. Comparing the stock with the [targets](Household.md) follows.
+Every change to a batch's packages is recorded in the [history](History.md), with who made it. The [Household](Household.md#stock-against-target) page compares the stock with the targets; expired batches are not counted there.

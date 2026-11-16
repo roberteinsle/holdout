@@ -64,7 +64,7 @@ class SupplyTargetsTest extends TestCase
         $this->get('/household')
             ->assertOk()
             ->assertSee('What you need for 14 days')
-            ->assertSeeInOrder(['Drinks', '5.5 l', '77 l', 'Grains, bread, potatoes', '1 kg', '13.9 kg']);
+            ->assertSeeInOrder(['Drinks', '77 l', '5.5 l per day', 'Grains, bread, potatoes', '13.9 kg', '1 kg per day']);
     }
 
     public function test_the_household_page_asks_for_the_size_when_it_is_missing(): void

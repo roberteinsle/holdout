@@ -15,7 +15,9 @@ use App\Modules\Inventory\Policies\BatchPolicy;
 use App\Modules\Inventory\Policies\LocationPolicy;
 use App\Modules\Inventory\Policies\MovementPolicy;
 use App\Modules\Inventory\Policies\ProductPolicy;
+use App\Modules\Inventory\Support\InventoryStock;
 use App\Registries\NavigationRegistry;
+use App\Registries\StockRegistry;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,6 +38,11 @@ class InventoryServiceProvider extends ServiceProvider
             $navigation->resource(self::MODULE, BatchResource::class);
             $navigation->resource(self::MODULE, LocationResource::class);
             $navigation->resource(self::MODULE, MovementResource::class);
+        });
+
+        // The stock per category, for the supply status (stock against target).
+        $this->app->afterResolving(StockRegistry::class, function (StockRegistry $stock): void {
+            $stock->register(self::MODULE, $this->app->make(InventoryStock::class));
         });
     }
 
