@@ -14,7 +14,8 @@ There are two ways:
 | Product | yes | One of your household's products (only on the Batches page) |
 | Packages | yes | How many packages with the same best-before date, 1 to 10,000 |
 | Best before | no | The date printed on the package. Leave it empty for things without a date, such as salt or sugar. Dates already in the past are allowed. |
-| Note | no | Anything worth knowing, e.g. "cellar" (up to 150 characters) |
+| Location | no | Where the packages are kept, one of the household's [locations](Locations.md); **+** adds a new one |
+| Note | no | Anything worth knowing, e.g. "on offer" (up to 150 characters) |
 
 ## Expiry status
 
@@ -32,13 +33,13 @@ The date badge in the lists has the status colour; tap or hover it to see the st
 ## The Batches page
 
 - All batches of the household, **earliest best-before date first**; batches without a date come last. What you should eat next is at the top.
-- On a phone, each row shows the product with the amount (e.g. `4 × 500 g`) and the note underneath, and the date on the right. Tap a row to edit the batch; delete it there.
-- Search finds the product name, brand and barcode. The filters narrow the list to one status (for example **Eat soon** or **Expired**) or one product.
+- On a phone, each row shows the product with the amount, location and note underneath (e.g. `4 × 500 g · Cellar shelf`), and the date on the right. Tap a row to edit the batch; delete it there.
+- Search finds the product name, brand and barcode. The filters narrow the list to one status (for example **Eat soon** or **Expired**) one [location](Locations.md) or one product.
 
 ## On the product page
 
-The **Batches** section below the product form lists the product's batches. Tap a row or the pencil to edit a batch in a dialog; the bin deletes it. Deleting a product also deletes its batches.
+The **Batches** section below the product form lists the product's batches, with their location under the amount. Tap a row or the pencil to edit a batch in a dialog; the bin deletes it. Deleting a product also deletes its batches.
 
 The product list shows **In stock**: the number of packages over all batches of each product.
 
-Storage locations, taking things out of the supply (with a history of who did what) and comparing the stock with the [targets](Household.md) follow.
+Taking things out of the supply (with a history of who did what) and comparing the stock with the [targets](Household.md) follow.

@@ -32,7 +32,7 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
 - Scan page (Inventory, `inventory::scan` view, `resources/js/scanner.js` with zxing; camera needs HTTPS, manual input
   always works): known barcode -> BatchResource create `?product=`, unknown -> ProductResource create `?barcode=`
   (fills and looks it up). The theme's `@source` includes `app/Modules/**`.
-- Modules: `Supply` (categories), `Inventory` (products; batches = packages + best-before date, status from `eat_soon_days`; locations, movements follow), `OpenFoodFacts`
+- Modules: `Supply` (categories), `Inventory` (products; batches = packages + best-before date, status from `eat_soon_days`; locations per household, optional on a batch, `nullOnDelete`; movements follow), `OpenFoodFacts`
   (lookup via the registry; local cache 30 days / not found 7 days, stale cache when offline, 30 req/min, generic
   User-Agent without contact data, `HOLDOUT_SOURCE_URL` optional; downloads the front photo once, https on
   openfoodfacts.org only, real images ≤ 2 MB, 15 s timeout). Files: private `data` disk = data folder, signed

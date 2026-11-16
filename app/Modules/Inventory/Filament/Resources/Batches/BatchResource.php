@@ -6,6 +6,7 @@ use App\Modules\Inventory\Enums\ExpiryStatus;
 use App\Modules\Inventory\Filament\Resources\Batches\Pages\CreateBatch;
 use App\Modules\Inventory\Filament\Resources\Batches\Pages\EditBatch;
 use App\Modules\Inventory\Filament\Resources\Batches\Pages\ListBatches;
+use App\Modules\Inventory\Filament\Resources\Locations\LocationResource;
 use App\Modules\Inventory\Models\Batch;
 use App\Modules\Inventory\Models\Product;
 use BackedEnum;
@@ -47,7 +48,7 @@ class BatchResource extends Resource
     {
         return parent::getEloquentQuery()
             ->forHousehold(auth()->user()->household_id)
-            ->with('product');
+            ->with(['product', 'location']);
     }
 
     public static function eatSoonDays(): int
@@ -96,10 +97,23 @@ class BatchResource extends Resource
                 ->helperText(__('Leave empty if the package has no date, e.g. salt or sugar.'))
                 ->minDate('2000-01-01')
                 ->maxDate('2100-12-31'),
+            Select::make('location_id')
+                ->label(__('Location'))
+                ->options(fn (): array => LocationResource::options())
+                ->searchable()
+                ->in(fn (): array => array_keys(LocationResource::options()))
+                ->createOptionForm(LocationResource::fields(ignoreRecord: false))
+                ->createOptionUsing(fn (array $data): int => LocationResource::createForHousehold($data)->getKey()),
             TextInput::make('note')
                 ->label(__('Note'))
                 ->maxLength(150),
         ]));
+    }
+
+    /** e.g. "4 × 500 g · Cellar · bought on offer": amount, location, note. */
+    public static function details(Batch $batch, bool $withAmount = true): ?string
+    {
+        return collect([$withAmount ? $batch->quantityLabel() : null, $batch->location?->name, $batch->note])->filter()->implode(' · ') ?: null;
     }
 
     public static function form(Schema $schema): Schema
@@ -111,16 +125,19 @@ class BatchResource extends Resource
     {
         return $table
             ->columns([
-                // Mobile first: the product name carries amount and note.
+                // Mobile first: the product name carries amount, location and note.
                 TextColumn::make('product.name')
                     ->label(__('Product'))
-                    ->description(fn (Batch $record): string => collect([$record->quantityLabel(), $record->note])->filter()->implode(' · '))
+                    ->description(fn (Batch $record): ?string => static::details($record))
                     ->searchable(['name', 'brand', 'barcode']),
                 static::bestBeforeColumn(),
             ])
             ->defaultSort(fn (Builder $query): Builder => $query->orderByBestBefore())
             ->filters([
                 static::statusFilter(),
+                SelectFilter::make('location_id')
+                    ->label(__('Location'))
+                    ->options(fn (): array => LocationResource::options()),
                 SelectFilter::make('product_id')
                     ->label(__('Product'))
                     ->options(fn (): array => static::productOptions()),

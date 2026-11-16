@@ -12,9 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * A number of packages of one product with one best-before date. The household
- * is the product's; product_id is set by the form (checked against the household).
+ * is the product's; product_id and location_id are set by the form (checked
+ * against the household).
  */
-#[Fillable(['product_id', 'quantity', 'best_before', 'note'])]
+#[Fillable(['product_id', 'location_id', 'quantity', 'best_before', 'note'])]
 class Batch extends Model
 {
     /** @use HasFactory<BatchFactory> */
@@ -37,6 +38,12 @@ class Batch extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    /** @return BelongsTo<Location, $this> */
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
     }
 
     /** @param  Builder<Batch>  $query */

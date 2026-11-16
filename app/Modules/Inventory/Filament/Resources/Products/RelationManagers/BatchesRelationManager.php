@@ -46,9 +46,10 @@ class BatchesRelationManager extends RelationManager
                 TextColumn::make('quantity')
                     ->label(__('Packages'))
                     ->formatStateUsing(fn (Batch $record): string => $record->quantityLabel())
-                    ->description(fn (Batch $record): ?string => $record->note),
+                    ->description(fn (Batch $record): ?string => BatchResource::details($record, withAmount: false)),
                 BatchResource::bestBeforeColumn(),
             ])
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('location'))
             ->defaultSort(fn (Builder $query): Builder => $query->orderByBestBefore())
             ->headerActions([
                 CreateAction::make()->label(__('Add batch')),
