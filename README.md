@@ -4,6 +4,7 @@
 # holdout
 ### Your family's emergency supply. Always know how long you'd last.
 
+[![Website](https://img.shields.io/badge/Website-holdout.einsle.app-4A5342)](https://holdout.einsle.app)
 [![Wiki](https://img.shields.io/badge/Docs-Wiki-4A5342)](../../wiki)
 [![License](https://img.shields.io/badge/License-AGPL--3.0-blue)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.5-777BB4)](composer.json)

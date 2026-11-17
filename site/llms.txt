@@ -1,0 +1,40 @@
+# Holdout
+
+> Free, self-hosted open-source web app (AGPL-3.0) to build and maintain a family emergency food and water supply. Scan barcodes with the phone camera, track best-before dates, and see how many days the supply lasts for the household and which category runs out first. Mobile first, sign-in without passwords, interface in English, German, Spanish, Portuguese and French. Runs as a Docker image with PostgreSQL on your own server. In an emergency it works without a server through a paper printout and an offline copy on every phone.
+
+- Project page: __SITE__/
+- Source code: https://github.com/__REPO__
+- Documentation (wiki): https://github.com/__REPO__/wiki
+- Installation guide: https://github.com/__REPO__/wiki/Installation
+- Docker image: ghcr.io/__REPO__
+- License: GNU Affero General Public License v3.0
+
+## Features
+
+- Dashboard: days of supply, the category that runs out first, what to eat soon, recent activity, quick scan
+- Household: number of adults and children, target days (default 14; the German BBK recommends 10), "eat soon" window, stock against target per category
+- Target amounts: (adults × need per adult + children × need per child) × target days, with the daily values per person from the stock calculator of the German Federal Office for Agriculture and Food (BLE), based on 2,200 kcal
+- Products and scanning: barcode lookup via Open Food Facts with a local cache (works offline for known products), product photos, package sizes in g/kg/ml/l
+- Batches: number of packages and best-before date; expired food is shown but never counted
+- Storage locations, and a history of what was added, eaten, thrown away or corrected, and by whom
+- Shopping list: what is missing per category to reach the target, rounded up, to share or copy
+- Equipment: checklists for home pharmacy, power outage, hygiene, documents, cash, grab bag, fire safety and staying informed (BBK guidance), with expiry dates, check intervals and a check log
+- Printout: A4 paper emergency copy in black and white with need per day, what to eat first and stock by location with a tally column
+- Offline copy: every phone keeps the printout content and opens it automatically when the server cannot be reached
+- Family: one household per installation, invitations, owner and member roles; sign-in with passkeys, email links or an authenticator app
+
+## Daily amounts per adult (BLE)
+
+- Drinks: 2.0 l (1.5 l drinking + 0.5 l cooking); children up to 12 years: 1.5 l in Holdout
+- Grains, bread, potatoes: 0.33 kg
+- Vegetables, pulses: 0.40 kg
+- Fruit, nuts: 0.25 kg
+- Milk, dairy products: 0.25 kg
+- Eggs, meat, fish: 0.12 kg
+- Fats, oil: 0.033 kg
+
+Example, 2 adults and 1 child for 10 days: 55 l drinks, 9.9 kg grains, 12 kg vegetables, 7.5 kg fruit, 7.5 kg dairy, 3.6 kg eggs/meat/fish, 1 kg fats.
+
+## Technology
+
+Laravel 13, PHP 8.5, Filament 5, Livewire, Tailwind 4, PostgreSQL; Docker image built by GitHub Actions and pushed to GHCR; reference deployment with Coolify. No telemetry; the only outside request is the optional barcode lookup at Open Food Facts.

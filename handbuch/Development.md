@@ -64,3 +64,13 @@ git clone "$(git remote get-url origin | sed 's/\.git$//').wiki.git" ../holdout.
 python3 scripts/build-wiki.py ../holdout.wiki
 cd ../holdout.wiki && git add -A && git commit -m "Update wiki from handbuch" && git push
 ```
+
+## Project page
+
+The project page that introduces Holdout to new users lives in `site/` and is published to GitHub Pages by `.github/workflows/pages.yml` on every push to `main` that touches `site/`. It is a single static page (`index.html`, `style.css`) without a build tool, external fonts or trackers. Always English.
+
+- **Placeholders:** `__SITE__` (the URL from `site/CNAME`), `__REPO__` (owner/repository from `github.repository`) and `__DATE__` (build date) are replaced at build time, so neither the domain nor the repository name is written into the pages twice.
+- **Content:** an overview of every feature with links into the wiki, the daily amounts per person, installation in three steps and an FAQ. When a feature, a module or the quick start changes, update the page together with the handbook.
+- **SEO and GEO:** title, description, canonical URL, Open Graph image (`og.png`, the social preview), JSON-LD (`SoftwareApplication`, `WebSite`, `FAQPage`, whose questions must match the visible FAQ), `robots.txt`, `sitemap.xml` and `llms.txt`, a plain-text summary for AI assistants. Keep concrete facts (numbers, sources, requirements) on the page: search engines and AI assistants quote them.
+- **Preview locally:** copy `site/` somewhere, replace the placeholders as the workflow does, and serve it with `python3 -m http.server`.
+- **Setup (once):** in the repository settings, *Pages → Source: GitHub Actions* and the custom domain from `site/CNAME` with *Enforce HTTPS*; at the DNS provider a `CNAME` record from that domain to `<github-owner>.github.io`, not proxied.

@@ -60,6 +60,9 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   written out; the menu page "Emergency copy" is `App\Filament\Pages\Printout` (`/print`). Offline copy = `public/sw.js`
   (registered in `partials/head-icons` when signed in, HTTPS/localhost only): caches only `/printout` (header
   `X-Holdout-Printout`), network first for pages, serves the copy with its banner when the server is unreachable.
+- Project page: `site/` (static, no build tool), published to GitHub Pages by `.github/workflows/pages.yml`; domain in
+  `site/CNAME`; placeholders `__SITE__`, `__REPO__`, `__DATE__` are replaced at build time. SEO/GEO: JSON-LD (FAQPage must
+  match the visible FAQ), `sitemap.xml`, `robots.txt`, `llms.txt`. Details in `handbuch/Development.md`.
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).
 - Languages: English (main, fallback), German, Spanish, Portuguese, French (`App\Support\Locales`). Every
@@ -77,6 +80,8 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   - `handbuch/<Page>.md`: all details; source of the wiki.
   - `README.md`: only for a new module or a changed quick start; keep it short.
   - `CLAUDE.md`: on changes to architecture, rules or workflows.
+  - Project page (`site/`): an overview of every feature, with SEO and GEO in mind; update it with the handbook when
+    features, modules or the quick start change.
   - Wiki: regenerate with `scripts/build-wiki.py` from `handbuch/` and push to the `holdout.wiki.git`
     repository; never edit the wiki by hand.
 - Commit and push to `main` when done.

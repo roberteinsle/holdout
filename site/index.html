@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Holdout – open-source app for your family's emergency food and water supply</title>
+  <meta name="description" content="Holdout is a free, self-hosted open-source web app for your family's emergency food and water supply: scan barcodes, track best-before dates, see how many days you would last, with a paper printout and an offline copy for emergencies.">
+  <meta name="theme-color" content="#4A5342">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="__SITE__/">
+  <meta property="og:title" content="Holdout – your family's emergency supply. Always know how long you'd last.">
+  <meta property="og:description" content="Free, open-source and self-hosted: scan barcodes, track best-before dates and see which food and water run out first. With a paper printout and an offline copy for emergencies.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="__SITE__/">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:site_name" content="Holdout">
+  <meta property="og:image" content="__SITE__/og.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Holdout: your family's emergency supply, with a phone showing how many days the supply lasts per category">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "__SITE__/#app",
+        "name": "Holdout",
+        "description": "Free, self-hosted open-source web app to build and maintain a family emergency food and water supply: barcode scanning, best-before tracking, target amounts per category from the household size, days of supply, shopping list, equipment checklists, a paper printout and an offline copy on phones.",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Web browser; server: Docker with PostgreSQL",
+        "url": "__SITE__/",
+        "image": "__SITE__/og.png",
+        "screenshot": "__SITE__/og.png",
+        "license": "https://www.gnu.org/licenses/agpl-3.0.html",
+        "isAccessibleForFree": true,
+        "codeRepository": "https://github.com/__REPO__",
+        "softwareHelp": "https://github.com/__REPO__/wiki",
+        "programmingLanguage": "PHP",
+        "inLanguage": ["en", "de", "es", "pt", "fr"],
+        "featureList": [
+          "Barcode scanning with the phone camera and product data from Open Food Facts",
+          "Target amounts per category from household size and target days (BLE values)",
+          "Best-before tracking with an eat-soon list",
+          "Days of supply and the category that runs out first",
+          "Storage locations and a history of who took what out",
+          "Shopping list of what is missing",
+          "Equipment checklists (home pharmacy, power outage, documents, grab bag) with a check log",
+          "Paper printout for emergencies",
+          "Offline copy on every phone",
+          "Sign-in without passwords: passkeys, email links, authenticator app",
+          "English, German, Spanish, Portuguese and French"
+        ],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "__SITE__/#website",
+        "url": "__SITE__/",
+        "name": "Holdout",
+        "inLanguage": "en",
+        "about": { "@id": "__SITE__/#app" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "What is Holdout?", "acceptedAnswer": { "@type": "Answer", "text": "Holdout is a free, open-source web app that helps a family build an emergency food and water supply, keep it up to date and eat it before it expires. You scan products with your phone, enter the best-before date, and Holdout shows how many days the supply lasts for your household and which category runs out first." } },
+          { "@type": "Question", "name": "How much water do I need per person per day?", "acceptedAnswer": { "@type": "Answer", "text": "The German Federal Office for Agriculture and Food (BLE) calculates 2 litres per adult and day: 1.5 litres for drinking and 0.5 litres for cooking. Holdout uses 1.5 litres for children up to 12 years. For 2 adults and 1 child over 10 days that is 55 litres." } },
+          { "@type": "Question", "name": "How many days should an emergency supply last?", "acceptedAnswer": { "@type": "Answer", "text": "The German Federal Office of Civil Protection and Disaster Assistance (BBK) recommends a supply for 10 days. In Holdout you set the target days for your household yourself; the default is 14 days." } },
+          { "@type": "Question", "name": "Does Holdout work during a power cut or without internet?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, through two fallbacks that need no server: a paper printout with the daily rations, what to eat first and the stock by location, and an offline copy of the same content that every phone keeps and opens automatically when the server cannot be reached. The live app itself needs the server; it is for managing the supply in normal times." } },
+          { "@type": "Question", "name": "Is Holdout free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Holdout is free software under the GNU Affero General Public License v3.0. There are no licence fees, no subscriptions and no tracking. You only pay for the server you run it on." } },
+          { "@type": "Question", "name": "Where is my data stored?", "acceptedAnswer": { "@type": "Answer", "text": "On your own server. Holdout has no telemetry and sends your data to nobody. The only outside request is the optional barcode lookup at Open Food Facts, which sends just the barcode." } },
+          { "@type": "Question", "name": "What do I need to run Holdout?", "acceptedAnswer": { "@type": "Answer", "text": "A small server that runs Docker, a PostgreSQL database, a domain with HTTPS and an SMTP account for sign-in links and invitations. The reference setup is Coolify; any Docker Compose host works." } },
+          { "@type": "Question", "name": "Can the whole family use it?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. One installation serves one household. The first person creates the household and invites the others; everyone signs in with their own account, without a password, and picks their own language." } }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Holdout home"><img src="icon.svg" alt="" width="34" height="34">holdout</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#emergency">In an emergency</a>
+      <a href="#amounts">How much?</a>
+      <a href="#install">Installation</a>
+      <a href="#faq">FAQ</a>
+      <a class="gh" href="https://github.com/__REPO__">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- Hero -->
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Open source · free · self-hosted</span>
+      <h1>Your family's emergency supply. <span>Always know how long you'd last.</span></h1>
+      <p class="lead">Holdout helps you build an emergency food and water supply, keep it up to date and eat it before it expires. Scan a barcode, enter the best-before date, and see how many days your household would last – and which category runs out first.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#install">Install Holdout</a>
+        <a class="btn btn-ghost" href="https://github.com/__REPO__">Source code on GitHub</a>
+      </div>
+      <ul class="facts">
+        <li><strong>0 €</strong><span>licence fees</span></li>
+        <li><strong>5</strong><span>languages</span></li>
+        <li><strong>AGPL-3.0</strong><span>open source</span></li>
+        <li><strong>Offline</strong><span>copy on paper and phone</span></li>
+      </ul>
+    </div>
+    <div class="phone" role="img" aria-label="Holdout dashboard on a phone: the supply lasts 9 of 14 days, drinks run out first, toast bread should be eaten in 11 days">
+      <div class="screen" aria-hidden="true">
+        <div class="bar"><span><img src="icon.svg" alt="">holdout</span><span class="avatar">A</span></div>
+        <div class="scan">Scan barcode</div>
+        <div class="card">
+          <div class="label">Supply</div>
+          <div class="big"><span class="warn">!</span><span>Your supply lasts 9 of 14 days.</span></div>
+          <div class="label" style="font-weight:400">Runs out first: Drinks</div>
+          <div class="row"><span>Drinks</span><span>64 % · 9 days</span></div><div class="meter"><i class="low" style="width:64%"></i></div>
+          <div class="row"><span>Grains, bread, potatoes</span><span>100 %</span></div><div class="meter"><i style="width:100%"></i></div>
+          <div class="row"><span>Vegetables, pulses</span><span>86 %</span></div><div class="meter"><i style="width:86%"></i></div>
+          <div class="row"><span>Fruit, nuts</span><span>71 %</span></div><div class="meter"><i class="low" style="width:71%"></i></div>
+          <div class="row"><span>Fats, oil</span><span>100 %</span></div><div class="meter"><i style="width:100%"></i></div>
+        </div>
+        <div class="card">
+          <div class="label">Eat soon</div>
+          <div class="item"><span>Toast bread · 500 g</span><span class="badge">in 11 days</span></div>
+          <div class="item"><span>Long-life milk · 1 l</span><span class="badge">in 34 days</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features -->
+<section id="features">
+  <div class="wrap">
+    <p class="kicker">Made for everyday life</p>
+    <h2>A supply that stays fresh, not forgotten</h2>
+    <p class="intro">Most emergency supplies are bought once and expire in the cellar. Holdout turns them into a living stock: you see what you have, what is missing and what to eat next – on the phone you already carry.</p>
+    <div class="grid">
+      <article class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M8 8v8M11 8v8M14 8v8M17 8v8"/></svg></div>
+        <h3>Scan instead of typing</h3>
+        <p>Point the phone camera at a barcode. Name, package size and photo come from Open Food Facts, cached on your server so a known product works without internet.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v18M5 8h14M7 8l-3 7a3 3 0 0 0 6 0zM17 8l-3 7a3 3 0 0 0 6 0z"/></svg></div>
+        <h3>Targets from your household</h3>
+        <p>Enter how many adults and children live with you and how many days the supply should last. Holdout calculates the amount per category from the official German BLE values.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Days of supply at a glance</h3>
+        <p>The dashboard shows how many days the whole supply lasts – as long as the category that runs out first, because 30 days of pasta do not help without water.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></div>
+        <h3>Eat it before it expires</h3>
+        <p>Every package has a best-before date. The "eat soon" list shows what to use next; expired food is shown but never counted towards your target.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0 1 12 0M14 20a4 4 0 0 1 7 0"/></svg></div>
+        <h3>Shared with the family</h3>
+        <p>Everyone uses their own phone and account, signs in without a password (passkey, email link or authenticator app) and picks their language. The history shows who took what out.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Your data, your server</h3>
+        <p>Holdout runs on your own server. No telemetry, no accounts at a vendor, no subscription. The code is open for everyone to read and improve.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="alt" id="how">
+  <div class="wrap">
+    <p class="kicker">How it works</p>
+    <h2>From empty shelf to "we're covered" in four steps</h2>
+    <p class="intro">No spreadsheet, no guessing. Holdout does the arithmetic and tells you what to buy next.</p>
+    <ol class="steps">
+      <li><h3>Set up the household</h3><p>Adults, children and how many days the supply should last. The BBK recommends 10 days.</p></li>
+      <li><h3>Scan what you have</h3><p>Scan each product, enter how many packages and the best-before date, and where they are stored.</p></li>
+      <li><h3>See how long it lasts</h3><p>Per category the stock against the target, and the days for the whole household.</p></li>
+      <li><h3>Refill and rotate</h3><p>The shopping list shows what is missing; eat what expires soon and take it out with one tap.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- Emergency -->
+<section class="emergency" id="emergency">
+  <div class="wrap">
+    <p class="kicker">When it counts</p>
+    <h2>Works when the power and the internet are gone</h2>
+    <p class="intro">In a power cut the server, the router and maybe the mobile network are down. That is exactly when you need to know what you have. So Holdout keeps two copies that need no server at all.</p>
+    <div class="grid">
+      <article class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg></div>
+        <h3>Paper printout</h3>
+        <p>An A4 copy in black and white for your emergency folder: how long the supply lasts, the need per day to ration by, what to eat first, and every package by storage location with a column for tally marks.</p>
+        <a class="more" href="https://github.com/__REPO__/wiki/Printout">About the printout →</a>
+      </article>
+      <article class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
+        <h3>Offline copy on every phone</h3>
+        <p>Each phone keeps the same content and updates it whenever Holdout is opened. When the server cannot be reached, every page opens the saved copy instead, clearly marked as offline.</p>
+        <a class="more" href="https://github.com/__REPO__/wiki/Offline">About the offline copy →</a>
+      </article>
+      <article class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5h10M9 12h10M9 19h10M4 5l1 1 2-2M4 12l1 1 2-2M4 19l1 1 2-2"/></svg></div>
+        <h3>Beyond food</h3>
+        <p>Checklists for the home pharmacy, power outage, hygiene, documents, cash, grab bag, fire safety and staying informed, based on BBK guidance, with expiry dates and a check log. They are on the printout too.</p>
+        <a class="more" href="https://github.com/__REPO__/wiki/Equipment">About equipment →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Amounts -->
+<section id="amounts">
+  <div class="wrap">
+    <p class="kicker">How much is enough?</p>
+    <h2>How much food and water per person per day</h2>
+    <p class="intro">Holdout uses the daily amounts per person from the stock calculator of the German Federal Office for Agriculture and Food (BLE), based on 2,200 kcal per person and day. Here they are for one adult, and for a 10-day supply as recommended by the German Federal Office of Civil Protection and Disaster Assistance (BBK).</p>
+    <div class="table-wrap">
+      <table>
+        <caption class="note" style="caption-side: bottom; text-align: left; padding: 0 16px 14px;">Children up to 12 years count like adults for food; for drinks Holdout uses 1.5 l per child and day. 1 l counts as 1 kg.</caption>
+        <thead>
+          <tr><th scope="col">Category</th><th scope="col" class="num">Per adult and day</th><th scope="col" class="num">1 adult, 10 days</th><th scope="col" class="num">2 adults + 1 child, 10 days</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Drinks (1.5 l drinking + 0.5 l cooking)</td><td class="num">2.0 l</td><td class="num">20 l</td><td class="num">55 l</td></tr>
+          <tr><td>Grains, bread, potatoes</td><td class="num">0.33 kg</td><td class="num">3.3 kg</td><td class="num">9.9 kg</td></tr>
+          <tr><td>Vegetables, pulses</td><td class="num">0.40 kg</td><td class="num">4.0 kg</td><td class="num">12.0 kg</td></tr>
+          <tr><td>Fruit, nuts</td><td class="num">0.25 kg</td><td class="num">2.5 kg</td><td class="num">7.5 kg</td></tr>
+          <tr><td>Milk, dairy products</td><td class="num">0.25 kg</td><td class="num">2.5 kg</td><td class="num">7.5 kg</td></tr>
+          <tr><td>Eggs, meat, fish</td><td class="num">0.12 kg</td><td class="num">1.2 kg</td><td class="num">3.6 kg</td></tr>
+          <tr><td>Fats, oil</td><td class="num">0.033 kg</td><td class="num">0.33 kg</td><td class="num">1.0 kg</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Sources: <a href="https://www.ernaehrungsvorsorge.de/private-vorsorge/notvorrat/vorratskalkulator/">BLE stock calculator</a> and <a href="https://www.bbk.bund.de/DE/Warnung-Vorsorge/Vorsorge/vorsorge_node.html">BBK guidance</a>. Holdout calculates these numbers for your household and target days automatically.</p>
+  </div>
+</section>
+
+<!-- Everything in one place -->
+<section class="alt" id="modules">
+  <div class="wrap">
+    <p class="kicker">Everything in one place</p>
+    <h2>What Holdout covers</h2>
+    <p class="intro">A core and modules that plug in through registries. Every part is described in detail in the wiki.</p>
+    <div class="grid">
+      <article class="card"><h3>Dashboard</h3><p>Days of supply, what to eat soon, recent activity and a big scan button.</p><a class="more" href="https://github.com/__REPO__/wiki/Dashboard">Read more →</a></article>
+      <article class="card"><h3>Household &amp; targets</h3><p>Household size, target days and the stock against the target per category.</p><a class="more" href="https://github.com/__REPO__/wiki/Household">Read more →</a></article>
+      <article class="card"><h3>Products &amp; scanning</h3><p>Products with package size and photo; barcode lookup via Open Food Facts.</p><a class="more" href="https://github.com/__REPO__/wiki/Scanning">Read more →</a></article>
+      <article class="card"><h3>Batches</h3><p>How many packages you have of each product and when they expire.</p><a class="more" href="https://github.com/__REPO__/wiki/Batches">Read more →</a></article>
+      <article class="card"><h3>Storage locations</h3><p>Cellar, kitchen, garage: know where everything is, also on paper.</p><a class="more" href="https://github.com/__REPO__/wiki/Locations">Read more →</a></article>
+      <article class="card"><h3>History</h3><p>Take packages out as eaten or thrown away; see who changed what and when.</p><a class="more" href="https://github.com/__REPO__/wiki/History">Read more →</a></article>
+      <article class="card"><h3>Shopping list</h3><p>What is still missing to reach the target, rounded up, ready to share.</p><a class="more" href="https://github.com/__REPO__/wiki/Shopping-list">Read more →</a></article>
+      <article class="card"><h3>Equipment</h3><p>Non-food checklists with expiry dates, check intervals and a check log.</p><a class="more" href="https://github.com/__REPO__/wiki/Equipment">Read more →</a></article>
+      <article class="card"><h3>Family &amp; sign-in</h3><p>Invitations, owner and member roles, passkeys, email links and authenticator app.</p><a class="more" href="https://github.com/__REPO__/wiki/Family">Read more →</a></article>
+    </div>
+  </div>
+</section>
+
+<!-- Installation -->
+<section id="install">
+  <div class="wrap">
+    <p class="kicker">Installation</p>
+    <h2>Up and running in an afternoon</h2>
+    <p class="intro">Holdout ships as a ready-made Docker image from the GitHub Container Registry. You need a small server, a domain with HTTPS and an SMTP account for sign-in links. No programming required.</p>
+    <ol class="steps three">
+      <li><h3>Server</h3><p>A small virtual machine or home server with Docker, for example managed with Coolify.</p></li>
+      <li><h3>Database and app</h3><p>Create a PostgreSQL database and start the Holdout image with its environment variables. The database is set up automatically on start.</p></li>
+      <li><h3>Get started</h3><p>Open your domain, create the household with its size, invite the family and scan your supply.</p></li>
+    </ol>
+    <p style="margin-top: 28px;"><a class="btn btn-primary" href="https://github.com/__REPO__/wiki/Installation">Step-by-step installation guide</a></p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="alt faq" id="faq">
+  <div class="wrap">
+    <p class="kicker">FAQ</p>
+    <h2>Frequently asked questions</h2>
+    <details open><summary>What is Holdout?</summary><p>Holdout is a free, open-source web app that helps a family build an emergency food and water supply, keep it up to date and eat it before it expires. You scan products with your phone, enter the best-before date, and Holdout shows how many days the supply lasts for your household and which category runs out first.</p></details>
+    <details><summary>How much water do I need per person per day?</summary><p>The German Federal Office for Agriculture and Food (BLE) calculates 2 litres per adult and day: 1.5 litres for drinking and 0.5 litres for cooking. Holdout uses 1.5 litres for children up to 12 years. For 2 adults and 1 child over 10 days that is 55 litres.</p></details>
+    <details><summary>How many days should an emergency supply last?</summary><p>The German Federal Office of Civil Protection and Disaster Assistance (BBK) recommends a supply for 10 days. In Holdout you set the target days for your household yourself; the default is 14 days.</p></details>
+    <details><summary>Does Holdout work during a power cut or without internet?</summary><p>Yes, through two fallbacks that need no server: a paper printout with the daily rations, what to eat first and the stock by location, and an offline copy of the same content that every phone keeps and opens automatically when the server cannot be reached. The live app itself needs the server; it is for managing the supply in normal times.</p></details>
+    <details><summary>Is Holdout free?</summary><p>Yes. Holdout is free software under the GNU Affero General Public License v3.0. There are no licence fees, no subscriptions and no tracking. You only pay for the server you run it on.</p></details>
+    <details><summary>Where is my data stored?</summary><p>On your own server. Holdout has no telemetry and sends your data to nobody. The only outside request is the optional barcode lookup at Open Food Facts, which sends just the barcode.</p></details>
+    <details><summary>What do I need to run Holdout?</summary><p>A small server that runs Docker, a PostgreSQL database, a domain with HTTPS and an SMTP account for sign-in links and invitations. The reference setup is Coolify; any Docker Compose host works.</p></details>
+    <details><summary>Can the whole family use it?</summary><p>Yes. One installation serves one household. The first person creates the household and invites the others; everyone signs in with their own account, without a password, and picks their own language.</p></details>
+  </div>
+</section>
+
+<!-- Open source -->
+<section id="open-source">
+  <div class="wrap">
+    <p class="kicker">Open source</p>
+    <h2>Free software for every family</h2>
+    <p class="intro">Holdout is licensed under the GNU AGPL-3.0. Every family may use, adapt and share it at no cost – improvements stay open for everyone. Ideas, wishes and bug reports are welcome as an issue on GitHub.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="https://github.com/__REPO__/issues/new">Suggest an idea or report a bug</a>
+      <a class="btn btn-ghost" href="https://github.com/__REPO__/wiki">Read the wiki</a>
+    </div>
+    <ul class="stack">
+      <li><b>Backend</b>Laravel 13, PHP 8.5</li>
+      <li><b>Interface</b>Filament 5, Livewire, Tailwind 4</li>
+      <li><b>Database</b>PostgreSQL</li>
+      <li><b>Operation</b>Docker image, e.g. with Coolify</li>
+      <li><b>Product data</b>Open Food Facts</li>
+      <li><b>Languages</b>EN, DE, ES, PT, FR</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Holdout · open source under AGPL-3.0</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/__REPO__">GitHub</a>
+      <a href="https://github.com/__REPO__/wiki">Wiki</a>
+      <a href="https://github.com/__REPO__/issues">Issues</a>
+      <a href="https://github.com/__REPO__/blob/main/LICENSE">License</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
