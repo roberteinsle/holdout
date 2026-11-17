@@ -25,6 +25,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - name: Build
         run: |
           site_url="https://$(tr -d '[:space:]' < site/CNAME)"
@@ -40,3 +42,25 @@ jobs:
           path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
+
+      # IndexNow: tell Bing, Yandex, Seznam, Naver and Yep that the page changed (Bing also feeds
+      # the search of ChatGPT and Copilot). Only when site/ changed; a failure never fails the deploy.
+      # The key is public by design: site/<key>.txt proves that we own the domain.
+      - name: IndexNow
+        continue-on-error: true
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ] \
+             && git cat-file -e "${{ github.event.before }}" 2>/dev/null \
+             && git diff --quiet "${{ github.event.before }}" "${{ github.sha }}" -- site/; then
+            echo "site/ unchanged, nothing to report"; exit 0
+          fi
+          host="$(tr -d '[:space:]' < site/CNAME)"
+          key="$(basename "$(ls site/*.txt | grep -E '/[0-9a-f]{32}\.txt$' | head -n 1)" .txt)"
+          urls="$(grep -o '<loc>[^<]*</loc>' _site/sitemap.xml | sed -e 's#</\?loc>##g')
+          https://${host}/llms.txt
+          https://${host}/sitemap.xml"
+          body="$(jq -n --arg host "$host" --arg key "$key" --arg urls "$urls" \
+            '{host: $host, key: $key, keyLocation: "https://\($host)/\($key).txt", urlList: ($urls | split("\n") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0)))}')"
+          echo "$body"
+          curl -sS --fail-with-body -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' -d "$body" -w '\nHTTP %{http_code}\n'

@@ -62,7 +62,9 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   `X-Holdout-Printout`), network first for pages, serves the copy with its banner when the server is unreachable.
 - Project page: `site/` (static, no build tool), published to GitHub Pages by `.github/workflows/pages.yml`; domain in
   `site/CNAME`; placeholders `__SITE__`, `__REPO__`, `__DATE__` are replaced at build time. SEO/GEO: JSON-LD (FAQPage must
-  match the visible FAQ), `sitemap.xml`, `robots.txt`, `llms.txt`. Details in `handbuch/Development.md`.
+  match the visible FAQ), `sitemap.xml`, `robots.txt`, `llms.txt`. IndexNow after each deploy that changed `site/`
+  (key = name of `site/<32 hex>.txt`, public; URLs = sitemap `<loc>`s + `llms.txt` + `sitemap.xml`; failures never fail
+  the deploy): every new page goes into `sitemap.xml`. Details in `handbuch/Development.md`.
 - Validate every input server-side, use `$request->validated()`, give every external call a rate limit,
   and never put API keys in the frontend (no secrets in `VITE_*`).
 - Languages: English (main, fallback), German, Spanish, Portuguese, French (`App\Support\Locales`). Every
