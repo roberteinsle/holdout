@@ -6,7 +6,7 @@ Holdout records every change to the stock: what was added, eaten, thrown away or
 
 When you use something from the supply, take it out of its [batch](Batches.md) so the stock stays right:
 
-1. Tap the **minus** icon of the batch: in the **Batches** list, in the **Batches** section of a product page, or **Take out** at the top of a batch's page.
+1. Tap the **minus** icon of the batch: in the **Batches** list, in the **Batches** section of a product page, or **Take out** at the top of a batch's page. Or [scan](Scanning.md) the barcode and choose **Take out** next to the batch.
 2. Enter how many **packages** (1 up to what the batch still has).
 3. Pick the **reason**: **Consumed** (eaten or drunk) or **Discarded** (thrown away, e.g. spoiled).
 4. Optionally add a **note** (up to 150 characters), e.g. "for the soup".

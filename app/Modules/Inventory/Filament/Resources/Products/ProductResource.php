@@ -22,6 +22,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -77,8 +78,14 @@ class ProductResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
+        return $schema->components(static::fields());
+    }
+
+    /** @return array<int, Component> */
+    public static function fields(): array
+    {
         // Barcode first: it fills the other fields from the product database.
-        return $schema->components([
+        return [
             TextInput::make('barcode')
                 ->label(__('Barcode'))
                 ->helperText(__('Optional. The number under the barcode (8 to 14 digits). Name, brand and size are looked up automatically.'))
@@ -142,7 +149,7 @@ class ProductResource extends Resource
                     ->required()
                     ->selectablePlaceholder(false),
             ]),
-        ]);
+        ];
     }
 
     /**

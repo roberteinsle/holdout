@@ -32,8 +32,10 @@ Mobile-first Laravel 13 + Filament 5 app for a family emergency food & water sup
   `tests/Unit/ArchitectureTest.php` enforces it. A module owns its models, policies (`Gate::policy`), Filament
   resources and migrations (`loadMigrationsFrom`); factories stay in `database/factories`.
 - Scan page (Inventory, `inventory::scan` view, `resources/js/scanner.js` with zxing; camera needs HTTPS, manual input
-  always works): known barcode -> BatchResource create `?product=`, unknown -> ProductResource create `?barcode=`
-  (fills and looks it up). The theme's `@source` includes `app/Modules/**`.
+  always works): product in stock -> shown on the page (`productId`) with its batches, `takeOutAction` per batch (a batch
+  gone meanwhile throws `ActionNotResolvableException`, which closes the dialog); known without stock -> BatchResource
+  create `?product=`; unknown -> ProductResource create `?barcode=` (fills and looks it up, switches on `add_batch`:
+  CreateProduct saves product and first batch in one transaction). The theme's `@source` includes `app/Modules/**`.
 - Modules: `Supply` (categories), `Inventory` (products; batches = packages + best-before date, status from `eat_soon_days`; locations per household, optional on a batch, `nullOnDelete`; movements = history: `BatchObserver` records added/corrected via `StockLedger`, take-out goes through `StockLedger::takeOut()` (saves quietly, deletes empty batches), read-only, `user_id`/`batch_id` `nullOnDelete`), `OpenFoodFacts`
   (lookup via the registry; local cache 30 days / not found 7 days, stale cache when offline, 30 req/min, generic
   User-Agent without contact data, `HOLDOUT_SOURCE_URL` optional; downloads the front photo once, https on

@@ -16,7 +16,9 @@ Choose **Add product** and fill in:
 | Package size | yes | Amount in one package, e.g. `500` |
 | Unit | yes | `g`, `kg`, `ml` or `l` |
 
-After **Create**, the product's page opens so you can add its first batch. **Create & create another** keeps the form open for the next product instead.
+To record the packages at the same time, switch on **Put into stock right away** and enter packages, best-before date, location and note: they are saved as the product's first [batch](Batches.md). After [scanning](Scanning.md) an unknown barcode the switch is already on. Either everything is saved or nothing.
+
+After **Create**, the product's page opens with its batches. **Create & create another** keeps the form open for the next product instead.
 
 ## Looking up a barcode
 

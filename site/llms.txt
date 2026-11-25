@@ -14,7 +14,7 @@
 - Dashboard: days of supply, the category that runs out first, what to eat soon, recent activity, quick scan
 - Household: number of adults and children, target days (default 14; the German BBK recommends 10), "eat soon" window, stock against target per category
 - Target amounts: (adults × need per adult + children × need per child) × target days, with the daily values per person from the stock calculator of the German Federal Office for Agriculture and Food (BLE), based on 2,200 kcal
-- Products and scanning: barcode lookup via Open Food Facts with a local cache (works offline for known products), product photos, package sizes in g/kg/ml/l
+- Products and scanning: barcode lookup via Open Food Facts with a local cache (works offline for known products), product photos, package sizes in g/kg/ml/l; scanning a new product saves its packages and best-before date in one step, scanning a product in stock lists its batches (earliest best-before date first) to take packages out
 - Batches: number of packages and best-before date; expired food is shown but never counted
 - Storage locations, and a history of what was added, eaten, thrown away or corrected, and by whom
 - Shopping list: what is missing per category to reach the target, rounded up, to share or copy

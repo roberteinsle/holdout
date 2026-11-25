@@ -11,7 +11,7 @@ Holdout is a mobile-first web app that helps families build and keep an emergenc
 - [Sign-in and security](Sign-in-and-security.md): passkeys, email links, authenticator app, recovery codes
 - [Household](Household.md): household size, target days, "eat soon" window, stock against target
 - [Categories](Categories.md): food and water categories and the daily need per person (BLE values)
-- [Scanning](Scanning.md): scan a barcode with the phone camera to add a batch or a new product
+- [Scanning](Scanning.md): scan a barcode with the phone camera to take packages out, add a batch or add a new product
 - [Products](Products.md): the products in your supply, with category and package size
 - [Shopping list](Shopping-list.md): what is still missing to reach the target, to share or copy
 - [Batches](Batches.md): how many packages you have and when they expire

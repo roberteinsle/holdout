@@ -4,10 +4,12 @@ A **batch** records how much of a [product](Products.md) you have: a number of p
 
 ## Adding a batch
 
-There are two ways:
+There are several ways:
 
 - On the **Batches** page, choose **Add batch** and pick the product.
-- On a product's page (tap it in the product list), choose **Add batch** in the **Batches** section. After you create a product, Holdout opens its page so you can add the first batch straight away.
+- On a product's page (tap it in the product list), choose **Add batch** in the **Batches** section.
+- While creating a product, with **Put into stock right away** (see [Products](Products.md)).
+- After [scanning](Scanning.md) a barcode.
 
 | Field | Required | Description |
 |---|---|---|

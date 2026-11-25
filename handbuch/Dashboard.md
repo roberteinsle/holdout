@@ -6,7 +6,7 @@ The **Dashboard** is the start page. It answers the everyday questions at a glan
 
 Two big buttons at the top:
 
-- **Scan** opens the [barcode scanner](Scanning.md): a known product goes straight to adding a batch, an unknown one to adding the product.
+- **Scan** opens the [barcode scanner](Scanning.md): a product in stock offers taking packages out or adding a batch, a known one without stock goes straight to adding a batch, an unknown one to adding the product.
 - **Add batch** opens the form for a new [batch](Batches.md).
 
 ## Supply
